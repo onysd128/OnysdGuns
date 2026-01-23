@@ -87,6 +87,31 @@ public class GuiAttachment extends GuiContainer
                 }
             }
         }
+
+        // Draw icons for each attachment slot (on top of slots)
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+        ItemStack heldStack = this.mc.player.inventory.getItemStack();
+        for(int i = 0; i < IAttachment.Type.values().length; i++)
+        {
+            Slot slot = this.container.getSlot(i);
+            
+            // Always draw icon for empty slots
+            if(slot.getStack().isEmpty())
+            {
+                // Check if we can place the held item in this slot
+                if(!this.canPlaceAttachmentInSlot(heldStack, slot))
+                {
+                    // Draw not applicable icon (coordinates are relative to GUI in foreground layer)
+                    this.drawTexturedModalRect(8, 17 + i * 18, 176, 0, 16, 16);
+                }
+                else
+                {
+                    // Draw icon for empty slot (176, 16 + i * 16 is the texture coordinate)
+                    this.drawTexturedModalRect(8, 17 + i * 18, 176, 16 + i * 16, 16, 16);
+                }
+            }
+        }
     }
 
     @Override
@@ -116,7 +141,7 @@ public class GuiAttachment extends GuiContainer
         GlStateManager.pushMatrix();
         {
             // Static position, rotation, and scale
-            GlStateManager.translate(left + 96, top + 52, 150);
+            GlStateManager.translate(left + 0, top + 30, 150);
             GlStateManager.rotate(-30F, 1, 0, 0);
             GlStateManager.rotate(150F, 0, 1, 0);
             GlStateManager.scale(1.0F, 1.0F, 1.0F);
@@ -198,20 +223,6 @@ public class GuiAttachment extends GuiContainer
         }
         GlStateManager.popMatrix();
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-        // Draw icons for each attachment slot
-        for(int i = 0; i < IAttachment.Type.values().length; i++)
-        {
-            Slot slot = this.container.getSlot(i);
-            if(!this.canPlaceAttachmentInSlot(this.mc.player.inventory.getItemStack(), slot))
-            {
-                this.drawTexturedModalRect(left + 8, top + 17 + i * 18, 176, 0, 16, 16);
-            }
-            else if(slot.getStack().isEmpty())
-            {
-                this.drawTexturedModalRect(left + 8, top + 17 + i * 18, 176, 16 + i * 16, 16, 16);
-            }
-        }
     }
 
     private boolean canPlaceAttachmentInSlot(ItemStack stack, Slot slot)
