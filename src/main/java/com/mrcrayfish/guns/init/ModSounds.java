@@ -29,6 +29,7 @@ public class ModSounds
 		register("grenade_stun_ring");
 		register("machine_pistol_fire");
 		register("machine_pistol_fire_silenced");
+		register("ui_weapon_attach");
 	}
 
     private static void register(String name)

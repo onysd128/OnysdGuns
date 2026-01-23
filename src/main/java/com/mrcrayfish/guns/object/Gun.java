@@ -575,9 +575,20 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 	{
 		if(gun.hasTagCompound())
 		{
-			if(gun.getTagCompound().hasKey("attachments", Constants.NBT.TAG_COMPOUND))
+			NBTTagCompound gunTag = gun.getTagCompound();
+			// Check for "Attachments" (capital A) first for compatibility with 1.19.X
+			if(gunTag.hasKey("Attachments", Constants.NBT.TAG_COMPOUND))
 			{
-				NBTTagCompound attachment = gun.getTagCompound().getCompoundTag("attachments");
+				NBTTagCompound attachment = gunTag.getCompoundTag("Attachments");
+				if(attachment.hasKey(type.getName(), Constants.NBT.TAG_COMPOUND))
+				{
+					return new ItemStack(attachment.getCompoundTag(type.getName()));
+				}
+			}
+			// Fallback to "attachments" (lowercase) for backward compatibility
+			else if(gunTag.hasKey("attachments", Constants.NBT.TAG_COMPOUND))
+			{
+				NBTTagCompound attachment = gunTag.getCompoundTag("attachments");
 				if(attachment.hasKey(type.getName(), Constants.NBT.TAG_COMPOUND))
 				{
 					return new ItemStack(attachment.getCompoundTag(type.getName()));

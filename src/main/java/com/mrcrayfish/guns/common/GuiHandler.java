@@ -1,6 +1,8 @@
 package com.mrcrayfish.guns.common;
 
+import com.mrcrayfish.guns.client.gui.GuiAttachment;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
+import com.mrcrayfish.guns.common.container.ContainerAttachment;
 import com.mrcrayfish.guns.common.container.ContainerWorkbench;
 import com.mrcrayfish.guns.tileentity.TileEntityWorkbench;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,15 +18,25 @@ import javax.annotation.Nullable;
  */
 public class GuiHandler implements IGuiHandler
 {
+    public static final int GUI_WORKBENCH = 0;
+    public static final int GUI_ATTACHMENTS = 1;
+
     @Nullable
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        BlockPos pos = new BlockPos(x, y, z);
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if(tileEntity instanceof TileEntityWorkbench)
+        if(ID == GUI_WORKBENCH)
         {
-            return new ContainerWorkbench(player.inventory, (TileEntityWorkbench) tileEntity);
+            BlockPos pos = new BlockPos(x, y, z);
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if(tileEntity instanceof TileEntityWorkbench)
+            {
+                return new ContainerWorkbench(player.inventory, (TileEntityWorkbench) tileEntity);
+            }
+        }
+        else if(ID == GUI_ATTACHMENTS)
+        {
+            return new ContainerAttachment(player.inventory, player.inventory.getCurrentItem(), player);
         }
         return null;
     }
@@ -33,11 +45,18 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        BlockPos pos = new BlockPos(x, y, z);
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if(tileEntity instanceof TileEntityWorkbench)
+        if(ID == GUI_WORKBENCH)
         {
-            return new GuiWorkbench(player.inventory, (TileEntityWorkbench) tileEntity);
+            BlockPos pos = new BlockPos(x, y, z);
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if(tileEntity instanceof TileEntityWorkbench)
+            {
+                return new GuiWorkbench(player.inventory, (TileEntityWorkbench) tileEntity);
+            }
+        }
+        else if(ID == GUI_ATTACHMENTS)
+        {
+            return new GuiAttachment(player, player.inventory.getCurrentItem());
         }
         return null;
     }

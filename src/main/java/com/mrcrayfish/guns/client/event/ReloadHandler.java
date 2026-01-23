@@ -4,6 +4,7 @@ import com.mrcrayfish.guns.client.KeyBinds;
 import com.mrcrayfish.guns.event.CommonEvents;
 import com.mrcrayfish.guns.item.ItemGun;
 import com.mrcrayfish.guns.network.PacketHandler;
+import com.mrcrayfish.guns.network.message.MessageOpenAttachments;
 import com.mrcrayfish.guns.network.message.MessageReload;
 import com.mrcrayfish.guns.network.message.MessageUnload;
 import com.mrcrayfish.guns.object.Gun;
@@ -57,6 +58,18 @@ public class ReloadHandler
         {
             setReloading(false);
             PacketHandler.INSTANCE.sendToServer(new MessageUnload());
+        }
+        if(KeyBinds.KEY_ATTACHMENTS.isPressed())
+        {
+            EntityPlayer player = Minecraft.getMinecraft().player;
+            if(player != null && Minecraft.getMinecraft().currentScreen == null)
+            {
+                ItemStack heldItem = player.getHeldItemMainhand();
+                if(heldItem.getItem() instanceof ItemGun)
+                {
+                    PacketHandler.INSTANCE.sendToServer(new MessageOpenAttachments());
+                }
+            }
         }
     }
 

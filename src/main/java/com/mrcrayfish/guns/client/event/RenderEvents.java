@@ -668,39 +668,53 @@ public class RenderEvents
         {
             Gun gun = ((ItemGun) stack.getItem()).getGun();
             NBTTagCompound gunTag = ItemStackUtil.createTagCompound(stack);
-            NBTTagCompound attachments = gunTag.getCompoundTag("attachments");
-            for(String attachmentKey : attachments.getKeySet())
+            // Check for "Attachments" (capital A) first for compatibility with 1.19.X
+            NBTTagCompound attachments = null;
+            if(gunTag.hasKey("Attachments", Constants.NBT.TAG_COMPOUND))
             {
-                IAttachment.Type type = IAttachment.Type.getType(attachmentKey);
-                if(gun.canAttachType(type))
+                attachments = gunTag.getCompoundTag("Attachments");
+            }
+            // Fallback to "attachments" (lowercase) for backward compatibility
+            else if(gunTag.hasKey("attachments", Constants.NBT.TAG_COMPOUND))
+            {
+                attachments = gunTag.getCompoundTag("attachments");
+            }
+            
+            if(attachments != null)
+            {
+                for(String attachmentKey : attachments.getKeySet())
                 {
-                    ItemStack attachmentStack = Gun.getAttachment(type, stack);
-                    if(!attachmentStack.isEmpty())
+                    IAttachment.Type type = IAttachment.Type.getType(attachmentKey);
+                    if(gun.canAttachType(type))
                     {
-                        GlStateManager.pushMatrix();
+                        ItemStack attachmentStack = Gun.getAttachment(type, stack);
+                        if(!attachmentStack.isEmpty())
                         {
-                            Gun.ScaledPositioned positioned = gun.getAttachmentPosition(type);
-                            if(positioned != null)
+                            GlStateManager.pushMatrix();
                             {
-                                double displayX = positioned.xOffset * 0.0625;
-                                double displayY = positioned.yOffset * 0.0625;
-                                double displayZ = positioned.zOffset * 0.0625;
-                                GlStateManager.translate(displayX, displayY, displayZ);
-                                GlStateManager.translate(0, -0.5, 0);
-                                GlStateManager.scale(positioned.scale, positioned.scale, positioned.scale);
+                                Gun.ScaledPositioned positioned = gun.getAttachmentPosition(type);
+                                if(positioned != null)
+                                {
+                                    double displayX = positioned.xOffset * 0.0625;
+                                    double displayY = positioned.yOffset * 0.0625;
+                                    double displayZ = positioned.zOffset * 0.0625;
+                                    GlStateManager.translate(displayX, displayY, displayZ);
+                                    GlStateManager.translate(0, -0.5, 0);
+                                    GlStateManager.scale(positioned.scale, positioned.scale, positioned.scale);
 
-                                IOverrideModel model = ModelOverrides.getModel(attachmentStack);
-                                if(model != null)
-                                {
-                                    model.render(partialTicks, transformType, attachmentStack, stack, entity);
-                                }
-                                else
-                                {
-                                    RenderUtil.renderModel(attachmentStack, stack);
+                                    IOverrideModel model = ModelOverrides.getModel(attachmentStack);
+                                    if(model != null)
+                                    {
+                                        model.render(partialTicks, transformType, attachmentStack, stack, entity);
+                                    }
+                                    else
+                                    {
+                                        RenderUtil.renderModel(attachmentStack, stack);
+                                    }
                                 }
                             }
+                            GlStateManager.popMatrix();
                         }
-                        GlStateManager.popMatrix();
                     }
                 }
             }
