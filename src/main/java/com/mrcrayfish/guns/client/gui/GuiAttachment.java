@@ -110,23 +110,43 @@ public class GuiAttachment extends GuiContainer
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
         ItemStack heldStack = this.mc.player.inventory.getItemStack();
+        
+        // Get gun to check which attachment types it supports
+        Gun gun = null;
+        if(!this.weapon.isEmpty() && this.weapon.getItem() instanceof ItemGun)
+        {
+            gun = ((ItemGun) this.weapon.getItem()).getModifiedGun(this.weapon);
+        }
+        
         for(int i = 0; i < IAttachment.Type.values().length; i++)
         {
             Slot slot = this.container.getSlot(i);
+            IAttachment.Type type = IAttachment.Type.values()[i];
             
             // Always draw icon for empty slots
             if(slot.getStack().isEmpty())
             {
-                // Check if we can place the held item in this slot
-                if(!this.canPlaceAttachmentInSlot(heldStack, slot))
+                // First check if the weapon supports this attachment type at all
+                boolean weaponSupportsType = gun != null && gun.canAttachType(type);
+                
+                if(!weaponSupportsType)
                 {
-                    // Draw not applicable icon (coordinates are relative to GUI in foreground layer)
+                    // Draw not applicable icon - weapon doesn't support this type
                     this.drawTexturedModalRect(8, 17 + i * 18, 176, 0, 16, 16);
                 }
                 else
                 {
-                    // Draw icon for empty slot (176, 16 + i * 16 is the texture coordinate)
-                    this.drawTexturedModalRect(8, 17 + i * 18, 176, 16 + i * 16, 16, 16);
+                    // Weapon supports this type, check if held item can be placed
+                    if(!this.canPlaceAttachmentInSlot(heldStack, slot))
+                    {
+                        // Draw not applicable icon - held item is incompatible
+                        this.drawTexturedModalRect(8, 17 + i * 18, 176, 0, 16, 16);
+                    }
+                    else
+                    {
+                        // Draw icon for empty slot (176, 16 + i * 16 is the texture coordinate)
+                        this.drawTexturedModalRect(8, 17 + i * 18, 176, 16 + i * 16, 16, 16);
+                    }
                 }
             }
         }
