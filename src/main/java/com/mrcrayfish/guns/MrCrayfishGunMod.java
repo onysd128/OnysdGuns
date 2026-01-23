@@ -7,7 +7,6 @@ import com.mrcrayfish.guns.init.*;
 import com.mrcrayfish.guns.item.AmmoRegistry;
 import com.mrcrayfish.guns.network.PacketHandler;
 import com.mrcrayfish.guns.proxy.CommonProxy;
-import com.mrcrayfish.guns.recipe.RecipeAttachment;
 import com.mrcrayfish.guns.recipe.RecipeColorItem;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.GameRules;
@@ -47,7 +46,6 @@ public class MrCrayfishGunMod
         ModPotions.register();
 		PacketHandler.init();
 
-		RegistrationHandler.Recipes.add(new RecipeAttachment());
 		RegistrationHandler.Recipes.add(new RecipeColorItem());
 
 		proxy.preInit();
