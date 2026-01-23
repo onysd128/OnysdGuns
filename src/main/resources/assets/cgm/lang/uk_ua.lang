@@ -1,0 +1,156 @@
+tile.cgm.workbench.name=Верстак
+
+item.cgm.handgun.name=Пістолет
+item.cgm.shotgun.name=Дробовик
+item.cgm.sniper_rifle.name=Снайперська гвинтівка
+item.cgm.grenade_launcher.name=Гранатомет
+item.cgm.bazooka.name=Базука
+item.cgm.chain_gun.name=Мініган
+item.cgm.rifle.name=Гвинтівка
+item.cgm.assault_rifle.name=Штурмова гвинтівка
+item.cgm.machine_pistol.name=Автоматичний пістолет
+
+item.cgm.basic_ammo.name=Базовий боєприпас
+item.cgm.advanced_ammo.name=Покращений боєприпас
+item.cgm.shell.name=Набій
+item.cgm.grenade.name=Граната
+item.cgm.stun_grenade.name=Світлошумова граната
+item.cgm.missile.name=Ракета
+
+item.cgm.scope.small.name=Приціл (Короткий)
+item.cgm.scope.medium.name=Приціл (Середній)
+item.cgm.scope.long.name=Приціл (Довгий)
+item.cgm.silencer.name=Глушник
+
+itemGroup.tabCGM=Мод зброї MrCrayfish
+
+death.attack.cgm.bullet.killed=%1$s був збитий %2$s
+death.attack.cgm.bullet.eliminated=%1$s був знищений %2$s
+death.attack.cgm.bullet.executed=%1$s був страчений %2$s
+death.attack.cgm.bullet.annihilated=%1$s був знищений %2$s
+death.attack.cgm.bullet.decimated=%1$s був розгромлений %2$s
+
+info.cgm.damage=Ушкодження: %s
+info.cgm.ammo=Боєприпаси: %s/%s
+info.cgm.ignore_ammo=Нескінченні боєприпаси
+
+config.cgm.title=Налаштування мода зброї MrCrayfish
+
+config.cgm.client=Клієнт
+
+config.cgm.client.tooltip=Налаштування тільки для клієнта.
+config.cgm.client.sounds=Звуки
+config.cgm.client.sounds.tooltip=Керування звуками, що спрацьовують від зброї
+config.cgm.client.sounds.hit_sound=Відтворювати звук попадання
+config.cgm.client.sounds.hit_sound.tooltip=Якщо увімкнено, звук дзвінка буде відтворюватися при успішному попаданні в гравця зброєю
+config.cgm.client.display=Відображення
+config.cgm.client.display.tooltip=Налаштування параметрів відображення
+config.cgm.client.display.workbench_animation=Анімація верстака
+config.cgm.client.display.workbench_animation.tooltip=Якщо увімкнено, виконується анімація під час перемикання предметів на верстаку
+
+config.cgm.server=Сервер
+
+config.cgm.server.tooltip=Налаштування тільки для сервера.
+config.cgm.server.grow_bounding_box_amount=Розширення меж об'єкта
+config.cgm.server.grow_bounding_box_amount.tooltip=Додаткова кількість для розширення меж сутності при перевірці зіткнення снаряда. Встановлення більшого значення зробить легшим попадання в гравців
+config.cgm.server.enabled_head_shots=Увімкнути постріли в голову
+config.cgm.server.enabled_head_shots.tooltip=Увімкнути перевірку пострілів в голову для гравців. Снаряди, що потрапили в голову гравця, матимуть збільшений урон.
+config.cgm.server.head_shot_damage_multiplier=Множник урону пострілу в голову
+config.cgm.server.head_shot_damage_multiplier.tooltip=Значення, на яке множиться урон, якщо снаряд потрапив в голову гравця
+
+config.cgm.server.network=Мережа
+config.cgm.server.network.tooltip=Властивості, що стосуються мережі
+config.cgm.server.network.projectile_tracking_range=Дальність відстеження снарядів
+config.cgm.server.network.projectile_tracking_range.tooltip=Відстань, на якій гравці повинні бути, щоб мати можливість відстежувати нові сліди снарядів. Більші значення означають, що ви можете бачити снаряди, що починаються з більшої відстані.
+
+config.cgm.server.aggro=Агресія мобів
+config.cgm.server.aggro.tooltip=Близькі моби розлючуються та/або лякаються від пострілів зброї.
+config.cgm.server.aggro.enabled=Увімкнути агресію мобів
+config.cgm.server.aggro.enabled.tooltip=Якщо увімкнено, близькі моби розлючуються та/або лякаються від пострілів зброї.
+config.cgm.server.aggro.hostile=Розлючувати ворожих мобів
+config.cgm.server.aggro.hostile.tooltip=Якщо увімкнено, крім того, що викликає паніку у мирних мобів, постріл зброї також змусить близьких ворожих мобів націлитися на стрілка.
+config.cgm.server.aggro.silenced=Дальність з глушником
+config.cgm.server.aggro.silenced.tooltip=Будь-які моби в межах сфери цього радіуса будуть атакувати стрілка з глушником.
+config.cgm.server.aggro.unsilenced=Дальність без глушника
+config.cgm.server.aggro.unsilenced.tooltip=Будь-які моби в межах сфери цього радіуса будуть атакувати стрілка без глушника.
+config.cgm.server.aggro.exempt=Виняткові класи мобів
+config.cgm.server.aggro.exempt.tooltip=Будь-які моби класів з шляхами класів у цьому списку не будуть атакувати стрілків.
+
+config.cgm.server.missiles.normal=Гранати
+config.cgm.server.missiles.normal.tooltip=Властивості, що стосуються ракет.
+config.cgm.server.missiles.normal.explosion_range=Радіус вибуху
+config.cgm.server.missiles.normal.explosion_range.tooltip=Максимальна відстань, на яку ефективний вибух.
+
+config.cgm.server.grenade.normal=Гранати
+config.cgm.server.grenade.normal.tooltip=Властивості, що стосуються гранат.
+config.cgm.server.grenade.normal.explosion_range=Радіус вибуху
+config.cgm.server.grenade.normal.explosion_range.tooltip=Максимальна відстань, на яку ефективний вибух.
+
+config.cgm.server.grenade.stun=Світлошумові гранати
+config.cgm.server.grenade.stun.tooltip=Властивості осліплення/оглушення світлошумових гранат.
+config.cgm.server.grenade.stun.blind=Осліплення
+config.cgm.server.grenade.stun.blind.tooltip=Властивості осліплення світлошумових гранат.
+config.cgm.server.grenade.stun.deafen=Оглушення
+config.cgm.server.grenade.stun.deafen.tooltip=Властивості оглушення світлошумових гранат.
+
+config.cgm.server.grenade.stun.effect_criteria.blind=Критерії ефекту
+config.cgm.server.grenade.stun.effect_criteria.blind.tooltip=Критерії, що визначають наявність/відсутність та тривалість ефекту осліплення.
+config.cgm.server.grenade.stun.blind.overlay.alpha=Прозорість накладання
+config.cgm.server.grenade.stun.blind.overlay.alpha.tooltip=Після того, як тривалість знизиться до цієї кількості тіків, прозорість накладання при осліпленні поступово згасне до 0 альфа.
+config.cgm.server.grenade.stun.blind.overlay.fade=Поріг згасання накладання
+config.cgm.server.grenade.stun.blind.overlay.fade.tooltip=Прозорість накладання при осліпленні буде цим значенням альфа, перед тим як зрештою згаснути до 0 альфа.
+
+config.cgm.server.grenade.stun.effect_criteria.deafen=Критерії ефекту
+config.cgm.server.grenade.stun.effect_criteria.deafen.tooltip=Критерії, що визначають наявність/відсутність та тривалість ефекту оглушення.
+config.cgm.server.grenade.stun.deafen.sound.percentage=Відсоток звуку
+config.cgm.server.grenade.stun.deafen.sound.percentage.tooltip=Гучність більшості звуків гри при оглушенні буде відтворюватися на цьому відсотку, перед тим як зрештою повернутися до %100.
+config.cgm.server.grenade.stun.deafen.sound.fade=Поріг згасання звуку
+config.cgm.server.grenade.stun.deafen.sound.fade.tooltip=Після того, як тривалість знизиться до цієї кількості тіків, гучність дзвону поступово згасне до 0, а гучність інших звуків повернеться до %100.
+config.cgm.server.grenade.stun.deafen.sound.ring=Гучність дзвону
+config.cgm.server.grenade.stun.deafen.sound.ring.tooltip=Гучність звуку дзвону при оглушенні буде відтворюватися на цій гучності, перед тим як зрештою згаснути до 0.
+
+config.cgm.server.grenade.stun.effect_criteria.radius=Радіус
+config.cgm.server.grenade.stun.effect_criteria.radius.tooltip=Граната повинна бути не далі цієї кількості метрів, щоб мати ефект.
+config.cgm.server.grenade.stun.effect_criteria.duration.max=Максимальна тривалість
+config.cgm.server.grenade.stun.effect_criteria.duration.max.tooltip=Ефект матиме цю тривалість (в тіках), якщо граната знаходиться безпосередньо біля очей гравця, коли він дивиться прямо на неї.
+config.cgm.server.grenade.stun.effect_criteria.duration.min=Мінімальна тривалість за відстанню
+config.cgm.server.grenade.stun.effect_criteria.duration.min.tooltip=Ефект матиме цю тривалість (в тіках), якщо граната знаходиться на максимальній відстані від очей гравця, коли він дивиться прямо на неї.
+config.cgm.server.grenade.stun.effect_criteria.angle.effect=Кут ефекту
+config.cgm.server.grenade.stun.effect_criteria.angle.effect.tooltip=Кут між напрямком очей/погляду та напрямком очей/гранати повинен бути не більше половини цієї кількості градусів, щоб мати ефект.
+config.cgm.server.grenade.stun.effect_criteria.angle.attenuation.max=Максимальне ослаблення за кутом
+config.cgm.server.grenade.stun.effect_criteria.angle.attenuation.max.tooltip=Після того, як тривалість ослаблена відстанню, вона буде подальше ослаблена залежно від кута (в градусах) між напрямком очей/погляду та напрямком очей/гранати. Це робиться шляхом множення на 1 (без ослаблення), якщо кут дорівнює 0; і на це значення, якщо кут є максимальним в межах кута ефекту.
+config.cgm.server.grenade.stun.effect_criteria.raytrace.opaque=Трасування променя непрозорих блоків
+config.cgm.server.grenade.stun.effect_criteria.raytrace.opaque.tooltip=Якщо увімкнено, ефект застосовується тільки якщо лінія між очима та гранатою не перетинає жодних не-рідких блоків з прозорістю більше 0.
+
+config.cgm.server.projectile_spread=Розкид снарядів
+config.cgm.server.projectile_spread.tooltip=Властивості, що стосуються розкиду снарядів
+config.cgm.server.projectile_spread.spread_threshold=Поріг розкиду
+config.cgm.server.projectile_spread.spread_threshold.tooltip=Кількість часу в мілісекундах перед тим, як логіка застосування розкиду пропускається. Значення вказує на розумну кількість часу перед тим, як зброя вважається знову стабільною.
+config.cgm.server.projectile_spread.max_count=Максимальна кількість
+config.cgm.server.projectile_spread.max_count.tooltip=Кількість разів, коли гравець повинен стріляти в межах порогу розкиду перед тим, як буде застосовано максимальну кількість розкиду. Встановлення більшого значення означає, що знадобиться більше часу для застосування розкиду.
+
+key.categories.gun=Мод зброї MrCrayfish
+key.categories.cgm=Мод зброї MrCrayfish
+key.aim=Прицілитися
+key.reload=Перезарядити
+key.unload=Розрядити
+key.cgm.attachments=Змінити додатки
+
+effect.cgm.blinded=Осліплений
+effect.cgm.deafened=Оглушений
+
+subtitle.cgm.stun.explosion=Вибух світлошумової гранати
+subtitle.cgm.stun.ring=Дзвін
+subtitle.cgm.fire=Постріл
+subtitle.cgm.fire.silenced=Приглушений постріл
+subtitle.cgm.reload=Перезарядка
+
+container.cgm.attachments=Змінити додатки
+container.cgm.attachments.window_help=Натисніть, щоб перемістити та обернути
+
+slot.cgm.attachment.scope=Приціл
+slot.cgm.attachment.barrel=Ствол
+slot.cgm.attachment.stock=Приклад
+slot.cgm.attachment.under_barrel=Підствольний
+slot.cgm.attachment.not_applicable=Не застосовується
+slot.cgm.attachment.incompatible=Схоже, це не підходить...
