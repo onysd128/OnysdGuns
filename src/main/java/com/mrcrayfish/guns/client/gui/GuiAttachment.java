@@ -207,14 +207,132 @@ public class GuiAttachment extends GuiContainer
         GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
         GlStateManager.pushMatrix();
         {
-            // Static position, rotation, and scale
-            GlStateManager.translate(left + 90, top + 30, 150);
-            GlStateManager.rotate(-30F, 1, 0, 0);
-            GlStateManager.rotate(150F, 0, 1, 0);
-            GlStateManager.scale(1.0F, 1.0F, 1.0F);
-            GlStateManager.rotate(90F, 0, 1, 0);
-            GlStateManager.scale(1.0F, -1.0F, 1.0F);
-            GlStateManager.scale(90.0F, 90.0F, 90.0F);
+            // Calculate bounding box and optimal scale/offset
+            double minX = 0.0, maxX = 0.0;
+            double minY = 0.0, maxY = 0.0;
+            double minZ = 0.0, maxZ = 0.0;
+            float baseScale = 90.0F;
+            
+            if(this.player != null && !this.weapon.isEmpty() && this.weapon.getItem() instanceof ItemGun)
+            {
+                Gun gun = ((ItemGun) this.weapon.getItem()).getModifiedGun(this.weapon);
+                
+                // Base weapon size (approximate, in blocks)
+                // Most weapons are roughly 0.4-0.6 blocks in size
+                double baseSize = 0.5;
+                minX = -baseSize;
+                maxX = baseSize;
+                minY = -baseSize;
+                maxY = baseSize;
+                minZ = -baseSize;
+                maxZ = baseSize;
+                
+                // Get attachments and calculate their positions
+                net.minecraft.nbt.NBTTagCompound gunTag = ItemStackUtil.createTagCompound(this.weapon);
+                net.minecraft.nbt.NBTTagCompound attachments = null;
+                if(gunTag.hasKey("Attachments", Constants.NBT.TAG_COMPOUND))
+                {
+                    attachments = gunTag.getCompoundTag("Attachments");
+                }
+                else if(gunTag.hasKey("attachments", Constants.NBT.TAG_COMPOUND))
+                {
+                    attachments = gunTag.getCompoundTag("attachments");
+                }
+                
+                if(attachments != null)
+                {
+                    for(String attachmentKey : attachments.getKeySet())
+                    {
+                        IAttachment.Type type = IAttachment.Type.getType(attachmentKey);
+                        if(type != null && gun.canAttachType(type))
+                        {
+                            Gun.ScaledPositioned positioned = gun.getAttachmentPosition(type);
+                            if(positioned != null)
+                            {
+                                // Convert pixel offsets to block coordinates
+                                double attachX = positioned.xOffset * 0.0625;
+                                double attachY = positioned.yOffset * 0.0625;
+                                double attachZ = positioned.zOffset * 0.0625;
+                                double attachScale = positioned.scale;
+                                
+                                // Approximate attachment size (in blocks)
+                                // Attachments are typically 0.15-0.25 blocks, scaled by their scale factor
+                                double attachSize = 0.2 * attachScale;
+                                
+                                // Update bounding box to include attachment
+                                minX = Math.min(minX, attachX - attachSize);
+                                maxX = Math.max(maxX, attachX + attachSize);
+                                minY = Math.min(minY, attachY - attachSize);
+                                maxY = Math.max(maxY, attachY + attachSize);
+                                minZ = Math.min(minZ, attachZ - attachSize);
+                                maxZ = Math.max(maxZ, attachZ + attachSize);
+                            }
+                        }
+                    }
+                }
+                
+                // Calculate center of bounding box
+                double centerX = (minX + maxX) / 2.0;
+                double centerY = (minY + maxY) / 2.0;
+                double centerZ = (minZ + maxZ) / 2.0;
+                
+                // Calculate size of bounding box
+                double sizeX = maxX - minX;
+                double sizeY = maxY - minY;
+                double sizeZ = maxZ - minZ;
+                double maxSize = Math.max(Math.max(sizeX, sizeY), sizeZ);
+                
+                // Calculate optimal scale to fit in viewport
+                // Viewport is 142x70 pixels
+                // After rotation (-30F on X, 150F on Y, 90F on Y), we need to account for perspective
+                // The viewport appears as roughly 1.58 units wide and 0.78 units tall in 3D space
+                // We want the model to fit with some padding (about 80% of viewport)
+                double viewportWidth = 142.0 / 90.0 * 0.8; // Approximate viewport width in 3D space
+                double viewportHeight = 70.0 / 90.0 * 0.8; // Approximate viewport height in 3D space
+                double viewportSize = Math.min(viewportWidth, viewportHeight);
+                
+                if(maxSize > 0.01)
+                {
+                    baseScale = (float)(viewportSize / maxSize * 90.0F);
+                    // Clamp scale to reasonable values
+                    baseScale = Math.max(30.0F, Math.min(120.0F, baseScale));
+                }
+                
+                // Calculate offset to center the model
+                // After rotations, we need to apply negative center to move model to origin
+                // Then translate to viewport center
+                float viewportCenterX = left + 26 + 142 / 2.0F;
+                float viewportCenterY = top + 17 + 70 / 2.0F - 3.0F; // Slightly higher
+                
+                // Translate to viewport center first
+                GlStateManager.translate(viewportCenterX, viewportCenterY, 150);
+                
+                // Apply rotations (same as before)
+                GlStateManager.rotate(-30F, 1, 0, 0);
+                GlStateManager.rotate(150F, 0, 1, 0);
+                GlStateManager.scale(1.0F, 1.0F, 1.0F);
+                GlStateManager.rotate(90F, 0, 1, 0);
+                GlStateManager.scale(1.0F, -1.0F, 1.0F);
+                
+                // Apply negative center offset to center the model
+                GlStateManager.translate(-centerX, -centerY, -centerZ);
+                
+                // Apply scale
+                GlStateManager.scale(baseScale, baseScale, baseScale);
+            }
+            else
+            {
+                // Fallback for non-gun items
+                float viewportCenterX = left + 26 + 142 / 2.0F;
+                float viewportCenterY = top + 17 + 70 / 2.0F - 6.0F; // Slightly higher
+                GlStateManager.translate(viewportCenterX, viewportCenterY, 150);
+                GlStateManager.rotate(-30F, 1, 0, 0);
+                GlStateManager.rotate(150F, 0, 1, 0);
+                GlStateManager.scale(1.0F, 1.0F, 1.0F);
+                GlStateManager.rotate(90F, 0, 1, 0);
+                GlStateManager.scale(1.0F, -1.0F, 1.0F);
+                GlStateManager.scale(baseScale, baseScale, baseScale);
+            }
 
             RenderHelper.enableStandardItemLighting();
             if(this.player != null && !this.weapon.isEmpty() && this.weapon.getItem() instanceof ItemGun)
