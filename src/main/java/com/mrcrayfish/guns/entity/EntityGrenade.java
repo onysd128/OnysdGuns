@@ -48,7 +48,7 @@ public class EntityGrenade extends EntityProjectile
 
     private void createExplosion(double x, double y, double z, boolean particle)
     {
-        boolean canGunGrief = this.world.getGameRules().getBoolean("gunGriefing");
+        boolean canGunGrief = GunConfig.SERVER.enableWeaponGriefing;
 
         Explosion explosion = new ProjectileExplosion(this, x, y, z, GunConfig.SERVER.grenades.explosionRadius, canGunGrief);
         explosion.doExplosionA();

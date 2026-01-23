@@ -71,7 +71,7 @@ public class EntityThrowableGrenade extends EntityThrowableItem
 
     private static void createGrenadeExplosion(EntityThrowableGrenade grenade, Entity thrower, double x, double y, double z, float strength, boolean isFlaming, boolean isSmoking)
     {
-        boolean canGunGrief = grenade.world.getGameRules().getBoolean("gunGriefing");
+        boolean canGunGrief = GunConfig.SERVER.enableWeaponGriefing;
         Explosion explosion = new ProjectileExplosion(grenade.world, thrower, grenade, grenade.getItem(), x, y, z, ModGuns.GRENADE_LAUNCHER.getGun().projectile.damage, GunConfig.SERVER.grenades.explosionRadius, canGunGrief);
         explosion.doExplosionA();
         explosion.doExplosionB(true);

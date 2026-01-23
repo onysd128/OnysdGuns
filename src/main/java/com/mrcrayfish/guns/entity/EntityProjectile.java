@@ -245,8 +245,7 @@ public class EntityProjectile extends Entity implements IEntityAdditionalSpawnDa
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
 
-            boolean canGunGrief = world.getGameRules().getBoolean("gunGriefing");
-            if(canGunGrief && (block instanceof BlockBreakable || block instanceof BlockPane) && state.getMaterial() == Material.GLASS)
+            if(GunConfig.SERVER.enableWeaponGriefing && (block instanceof BlockBreakable || block instanceof BlockPane) && state.getMaterial() == Material.GLASS)
             {
                 world.destroyBlock(result.getBlockPos(), false);
             }

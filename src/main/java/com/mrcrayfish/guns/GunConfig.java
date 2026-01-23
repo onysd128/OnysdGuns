@@ -102,6 +102,11 @@ public class GunConfig
 		@Config.LangKey(ProjectileSpread.PREFIX)
 		public ProjectileSpread projectileSpread = new ProjectileSpread();
 
+		@Config.Name("Enable Weapon Griefing")
+		@Config.Comment("If true, weapons can destroy blocks through explosions (grenades, missiles, etc.) and break glass blocks.")
+		@Config.LangKey(PREFIX + ".enable_weapon_griefing")
+		public boolean enableWeaponGriefing = true;
+
 		@Config.Name("Grow Bounding Box")
 		@Config.Comment("The extra amount to expand an entity's bounding box when checking for projectile collision. Setting this value higher will make it easier to hit players")
 		@Config.LangKey(PREFIX + ".grow_bounding_box")
