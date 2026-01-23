@@ -22,7 +22,7 @@ item.cgm.scope.medium.name=Приціл (Середній)
 item.cgm.scope.long.name=Приціл (Довгий)
 item.cgm.silencer.name=Глушник
 
-itemGroup.tabCGM=Мод зброї MrCrayfish
+itemGroup.tabCGM=Onysd Guns
 
 death.attack.cgm.bullet.killed=%1$s був збитий %2$s
 death.attack.cgm.bullet.eliminated=%1$s був знищений %2$s
@@ -34,7 +34,7 @@ info.cgm.damage=Ушкодження: %s
 info.cgm.ammo=Боєприпаси: %s/%s
 info.cgm.ignore_ammo=Нескінченні боєприпаси
 
-config.cgm.title=Налаштування мода зброї MrCrayfish
+config.cgm.title=Onysd Guns
 
 config.cgm.client=Клієнт
 
@@ -129,8 +129,8 @@ config.cgm.server.projectile_spread.spread_threshold.tooltip=Кількість 
 config.cgm.server.projectile_spread.max_count=Максимальна кількість
 config.cgm.server.projectile_spread.max_count.tooltip=Кількість разів, коли гравець повинен стріляти в межах порогу розкиду перед тим, як буде застосовано максимальну кількість розкиду. Встановлення більшого значення означає, що знадобиться більше часу для застосування розкиду.
 
-key.categories.gun=Мод зброї MrCrayfish
-key.categories.cgm=Мод зброї MrCrayfish
+key.categories.gun=Onysd Guns
+key.categories.cgm=Onysd Guns
 key.aim=Прицілитися
 key.reload=Перезарядити
 key.unload=Розрядити

@@ -22,7 +22,7 @@ item.cgm.scope.medium.name=Scope (Medium)
 item.cgm.scope.long.name=Scope (Long)
 item.cgm.silencer.name=Silencer
 
-itemGroup.tabCGM=MrCrayfish's Gun Mod
+itemGroup.tabCGM=Onysd Guns
 
 death.attack.cgm.bullet.killed=%1$s was taken down by %2$s
 death.attack.cgm.bullet.eliminated=%1$s was eliminated by %2$s
@@ -34,7 +34,7 @@ info.cgm.damage=Damage: %s
 info.cgm.ammo=Ammo: %s/%s
 info.cgm.ignore_ammo=Infinite Ammo
 
-config.cgm.title=MrCrayfish's Gun Mod Config
+config.cgm.title=Onysd Guns Config
 
 config.cgm.client=Client
 
@@ -128,8 +128,8 @@ config.cgm.server.projectile_spread.spread_threshold.tooltip=The amount of time 
 config.cgm.server.projectile_spread.max_count=Max Count
 config.cgm.server.projectile_spread.max_count.tooltip=The amount of times a player has too shoot within the spread threshold before the maximum amount of spread is applied. Setting the value higher means it will take longer for the spread to be applied.
 
-key.categories.gun=MrCrayfish's Gun Mod
-key.categories.cgm=MrCrayfish's Gun Mod
+key.categories.gun=Onysd Guns
+key.categories.cgm=Onysd Guns
 key.aim=Aim
 key.reload=Reload
 key.unload=Unload

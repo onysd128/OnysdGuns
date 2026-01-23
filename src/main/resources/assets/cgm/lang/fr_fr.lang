@@ -21,7 +21,7 @@ item.cgm.scope.medium.name=Lunette (Moyenne)
 item.cgm.scope.long.name=Lunette (Longue)
 item.cgm.silencer.name=Silencieux
 
-itemGroup.tabCGM=MrCrayfish's Gun Mod
+itemGroup.tabCGM=Onysd Guns
 
 death.attack.cgm.bullet.killed=%1$s a été abattu par %2$s
 death.attack.cgm.bullet.eliminated=%1$s a été éliminé par %2$s
@@ -33,7 +33,7 @@ info.cgm.damage=Dommages: %s
 info.cgm.ammo=Munitions: %s/%s
 info.cgm.ignore_ammo=Munitions Infinies
 
-config.cgm.title=Configuration de MrCrayfish's Gun Mod
+config.cgm.title=Configuration de Onysd Guns
 
 config.cgm.client=Client
 
@@ -99,7 +99,7 @@ config.cgm.server.grenade.stun.effect_criteria.angle.attenuation.max.tooltip=Apr
 config.cgm.server.grenade.stun.effect_criteria.raytrace.opaque=Intersection de Blocs Opaques
 config.cgm.server.grenade.stun.effect_criteria.raytrace.opaque.tooltip=Si vrai (true), l'effet est uniquement appliqué si la ligne passant par l'oeil et la grenade ne croise aucun bloc non-liquide avec une opacité plus grande que 0.
 
-key.categories.gun=MrCrayfish's Gun Mod
+key.categories.gun=Onysd Guns
 key.aim=Braquer
 key.reload=Recharger
 key.unload=Décharger

@@ -21,7 +21,7 @@ item.cgm.scope.medium.name=Mirino (medio)
 item.cgm.scope.long.name=Mirino (lungo)
 item.cgm.silencer.name=Silenziatore
 
-itemGroup.tabCGM=MrCrayfish's Gun Mod
+itemGroup.tabCGM=Onysd Guns
 
 death.attack.cgm.bullet.killed=%1$s e' stato abbattuto da %2$s
 death.attack.cgm.bullet.eliminated=%1$s e' stato eliminato da %2$s
@@ -33,7 +33,7 @@ info.cgm.damage=Danno: %s
 info.cgm.ammo=Munizioni: %s/%s
 info.cgm.ignore_ammo=Munizioni infinite
 
-config.cgm.title=MrCrayfish's Gun Mod Config
+config.cgm.title=Onysd Guns Config
 
 config.cgm.client=Client
 
@@ -99,7 +99,7 @@ config.cgm.server.grenade.stun.effect_criteria.angle.attenuation.max.tooltip=Dop
 config.cgm.server.grenade.stun.effect_criteria.raytrace.opaque=Raytrace blocchi opachi
 config.cgm.server.grenade.stun.effect_criteria.raytrace.opaque.tooltip=Se attivo, l'effetto e' applicato solo se la linea tra gli occhi e la granata non si interseca con qualsiasi blocco non-liquido con un opacita' con valore positivo.
 
-key.categories.gun=MrCrayfish's Gun Mod
+key.categories.gun=Onysd Guns
 key.aim=Mira
 key.reload=Ricarica
 key.unload=Scarica
