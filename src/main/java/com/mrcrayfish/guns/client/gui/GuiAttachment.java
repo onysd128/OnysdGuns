@@ -65,35 +65,46 @@ public class GuiAttachment extends GuiContainer
         }
     }
 
+    private Slot hoveredSlot = null;
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        // Find the hovered slot before calling super
+        this.hoveredSlot = null;
+        for(int i = 0; i < this.inventorySlots.inventorySlots.size(); ++i)
+        {
+            Slot slot = this.inventorySlots.inventorySlots.get(i);
+            if(this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY) && slot.isEnabled())
+            {
+                this.hoveredSlot = slot;
+                break; // Only highlight one slot
+            }
+        }
+        
+        // Call super to draw everything normally
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        
+        // Override the highlighting to only highlight the hovered slot
+        if(this.hoveredSlot != null)
+        {
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+            GlStateManager.pushMatrix();
+            GlStateManager.translate((float)this.guiLeft, (float)this.guiTop, 0.0F);
+            int slotColor = -2130706433;
+            this.drawGradientRect(this.hoveredSlot.xPos, this.hoveredSlot.yPos, this.hoveredSlot.xPos + 16, this.hoveredSlot.yPos + 16, slotColor, slotColor);
+            GlStateManager.popMatrix();
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
+        }
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         this.fontRenderer.drawString("Attachments", 8, 6, 4210752);
         this.fontRenderer.drawString(this.player.inventory.getDisplayName().getUnformattedText(), 8, 90, 4210752);
-
-        // Render tooltips for attachment slots
-        Slot hoveredSlot = null;
-        for(int i = 0; i < IAttachment.Type.values().length; i++)
-        {
-            Slot slot = this.container.getSlot(i);
-            if(isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
-            {
-                hoveredSlot = slot;
-                IAttachment.Type type = IAttachment.Type.values()[i];
-                ItemStack heldStack = this.mc.player.inventory.getItemStack();
-                if(slot instanceof SlotAttachment && slot.getStack().isEmpty() && !this.isCompatible(heldStack, (SlotAttachment) slot))
-                {
-                    String incompatibleText = I18n.format("slot.cgm.attachment.incompatible");
-                    this.drawHoveringText(Arrays.asList(TextFormatting.YELLOW + incompatibleText), mouseX - this.guiLeft, mouseY - this.guiTop);
-                }
-                else if(slot.getStack().isEmpty())
-                {
-                    String tooltipText = I18n.format("slot.cgm.attachment." + type.getName());
-                    this.drawHoveringText(Collections.singletonList(tooltipText), mouseX - this.guiLeft, mouseY - this.guiTop);
-                }
-                break; // Only show tooltip for the first hovered slot
-            }
-        }
 
         // Draw icons for each attachment slot (on top of slots)
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -119,6 +130,35 @@ public class GuiAttachment extends GuiContainer
                 }
             }
         }
+    }
+
+    @Override
+    protected void renderHoveredToolTip(int mouseX, int mouseY)
+    {
+        // Render tooltips for attachment slots
+        for(int i = 0; i < IAttachment.Type.values().length; i++)
+        {
+            Slot slot = this.container.getSlot(i);
+            if(this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
+            {
+                IAttachment.Type type = IAttachment.Type.values()[i];
+                ItemStack heldStack = this.mc.player.inventory.getItemStack();
+                if(slot instanceof SlotAttachment && slot.getStack().isEmpty() && !this.isCompatible(heldStack, (SlotAttachment) slot))
+                {
+                    String incompatibleText = I18n.format("slot.cgm.attachment.incompatible");
+                    this.drawHoveringText(Arrays.asList(TextFormatting.YELLOW + incompatibleText), mouseX - this.guiLeft, mouseY - this.guiTop);
+                }
+                else if(slot.getStack().isEmpty())
+                {
+                    String tooltipText = I18n.format("slot.cgm.attachment." + type.getName());
+                    this.drawHoveringText(Collections.singletonList(tooltipText), mouseX - this.guiLeft, mouseY - this.guiTop);
+                }
+                return; // Only show tooltip for the first hovered slot
+            }
+        }
+        
+        // Call super for other tooltips (items in slots, etc.)
+        super.renderHoveredToolTip(mouseX, mouseY);
     }
 
     @Override
@@ -148,7 +188,7 @@ public class GuiAttachment extends GuiContainer
         GlStateManager.pushMatrix();
         {
             // Static position, rotation, and scale
-            GlStateManager.translate(left + 0, top + 30, 150);
+            GlStateManager.translate(left + 90, top + 30, 150);
             GlStateManager.rotate(-30F, 1, 0, 0);
             GlStateManager.rotate(150F, 0, 1, 0);
             GlStateManager.scale(1.0F, 1.0F, 1.0F);
