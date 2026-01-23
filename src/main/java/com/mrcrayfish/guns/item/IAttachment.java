@@ -14,7 +14,7 @@ public interface IAttachment
 
     enum Type
     {
-        SCOPE, BARREL;
+        SCOPE, BARREL, STOCK, UNDER_BARREL;
 
         public String getName()
         {

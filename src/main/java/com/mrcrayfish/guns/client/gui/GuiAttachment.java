@@ -23,6 +23,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.resources.I18n;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -71,20 +72,26 @@ public class GuiAttachment extends GuiContainer
         this.fontRenderer.drawString(this.player.inventory.getDisplayName().getUnformattedText(), 8, 90, 4210752);
 
         // Render tooltips for attachment slots
+        Slot hoveredSlot = null;
         for(int i = 0; i < IAttachment.Type.values().length; i++)
         {
             Slot slot = this.container.getSlot(i);
             if(isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
             {
+                hoveredSlot = slot;
                 IAttachment.Type type = IAttachment.Type.values()[i];
-                if(slot instanceof SlotAttachment && slot.getStack().isEmpty() && !this.isCompatible(this.mc.player.inventory.getItemStack(), (SlotAttachment) slot))
+                ItemStack heldStack = this.mc.player.inventory.getItemStack();
+                if(slot instanceof SlotAttachment && slot.getStack().isEmpty() && !this.isCompatible(heldStack, (SlotAttachment) slot))
                 {
-                    this.drawHoveringText(Arrays.asList(TextFormatting.YELLOW + "Incompatible"), mouseX - this.guiLeft, mouseY - this.guiTop);
+                    String incompatibleText = I18n.format("slot.cgm.attachment.incompatible");
+                    this.drawHoveringText(Arrays.asList(TextFormatting.YELLOW + incompatibleText), mouseX - this.guiLeft, mouseY - this.guiTop);
                 }
                 else if(slot.getStack().isEmpty())
                 {
-                    this.drawHoveringText(Collections.singletonList("slot.cgm.attachment." + type.getName()), mouseX - this.guiLeft, mouseY - this.guiTop);
+                    String tooltipText = I18n.format("slot.cgm.attachment." + type.getName());
+                    this.drawHoveringText(Collections.singletonList(tooltipText), mouseX - this.guiLeft, mouseY - this.guiTop);
                 }
+                break; // Only show tooltip for the first hovered slot
             }
         }
 
