@@ -12,6 +12,7 @@ import com.mrcrayfish.guns.object.Gun;
 import net.minecraftforge.common.util.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -22,14 +23,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Author: MrCrayfish
@@ -42,13 +37,6 @@ public class GuiAttachment extends GuiContainer
     private final ItemStack weapon;
     private final ContainerAttachment container;
 
-    private boolean showHelp = true;
-    private int windowZoom = 10;
-    private int windowX, windowY;
-    private float windowRotationX, windowRotationY;
-    private boolean mouseGrabbed;
-    private int mouseGrabbedButton;
-    private int mouseClickedX, mouseClickedY;
 
     public GuiAttachment(EntityPlayer player, ItemStack weapon)
     {
@@ -80,24 +68,58 @@ public class GuiAttachment extends GuiContainer
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         this.fontRenderer.drawString("Attachments", 8, 6, 4210752);
-        this.fontRenderer.drawString(this.player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2 + 19, 4210752);
+        this.fontRenderer.drawString(this.player.inventory.getDisplayName().getUnformattedText(), 8, 90, 4210752);
 
-        int startX = (this.width - this.xSize) / 2;
-        int startY = (this.height - this.ySize) / 2;
+        // Render tooltips for attachment slots
+        for(int i = 0; i < IAttachment.Type.values().length; i++)
+        {
+            Slot slot = this.container.getSlot(i);
+            if(isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
+            {
+                IAttachment.Type type = IAttachment.Type.values()[i];
+                if(slot instanceof SlotAttachment && slot.getStack().isEmpty() && !this.isCompatible(this.mc.player.inventory.getItemStack(), (SlotAttachment) slot))
+                {
+                    this.drawHoveringText(Arrays.asList(TextFormatting.YELLOW + "Incompatible"), mouseX - this.guiLeft, mouseY - this.guiTop);
+                }
+                else if(slot.getStack().isEmpty())
+                {
+                    this.drawHoveringText(Collections.singletonList("slot.cgm.attachment." + type.getName()), mouseX - this.guiLeft, mouseY - this.guiTop);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+    {
+        this.drawDefaultBackground(); // Draw darkened background
+        
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
+        int left = (this.width - this.xSize) / 2;
+        int top = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(left, top, 0, 0, this.xSize, this.ySize);
+
+        // Draw black background for weapon viewport
+        this.drawRect(left + 26, top + 17, left + 26 + 142, top + 17 + 70, 0xFF000000);
 
         // Render 3D weapon preview
+        ScaledResolution scaledResolution = new ScaledResolution(this.mc);
+        int scaleFactor = scaledResolution.getScaleFactor();
+        int scissorX = (left + 26) * scaleFactor;
+        int scissorY = this.mc.displayHeight - ((top + 17 + 70) * scaleFactor);
+        int scissorWidth = 142 * scaleFactor;
+        int scissorHeight = 70 * scaleFactor;
+        
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(startX + 26, this.height - (startY + 17 + 70), 142, 70);
+        GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
         GlStateManager.pushMatrix();
         {
-            GlStateManager.translate(this.guiLeft + 96, this.guiTop + 50, 150);
-            GlStateManager.translate(this.windowX + (this.mouseGrabbed && this.mouseGrabbedButton == 0 ? mouseX - this.mouseClickedX : 0), 0, 0);
-            GlStateManager.translate(0, this.windowY + (this.mouseGrabbed && this.mouseGrabbedButton == 0 ? mouseY - this.mouseClickedY : 0), 0);
+            // Static position, rotation, and scale
+            GlStateManager.translate(left + 96, top + 52, 150);
             GlStateManager.rotate(-30F, 1, 0, 0);
-            GlStateManager.rotate(this.windowRotationY - (this.mouseGrabbed && this.mouseGrabbedButton == 1 ? mouseY - this.mouseClickedY : 0), 1, 0, 0);
-            GlStateManager.rotate(this.windowRotationX + (this.mouseGrabbed && this.mouseGrabbedButton == 1 ? mouseX - this.mouseClickedX : 0), 0, 1, 0);
             GlStateManager.rotate(150F, 0, 1, 0);
-            GlStateManager.scale(this.windowZoom / 10F, this.windowZoom / 10F, this.windowZoom / 10F);
+            GlStateManager.scale(1.0F, 1.0F, 1.0F);
             GlStateManager.rotate(90F, 0, 1, 0);
             GlStateManager.scale(1.0F, -1.0F, 1.0F);
             GlStateManager.scale(90.0F, 90.0F, 90.0F);
@@ -119,7 +141,7 @@ public class GuiAttachment extends GuiContainer
                     RenderUtil.renderModel(this.weapon, ItemCameraTransforms.TransformType.NONE);
                 }
                 
-                // Render attachments manually (renderAttachments is private)
+                // Render attachments manually
                 Gun gun = ((ItemGun) this.weapon.getItem()).getGun();
                 net.minecraft.nbt.NBTTagCompound gunTag = ItemStackUtil.createTagCompound(this.weapon);
                 net.minecraft.nbt.NBTTagCompound attachments = null;
@@ -177,46 +199,6 @@ public class GuiAttachment extends GuiContainer
         GlStateManager.popMatrix();
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        if(this.showHelp)
-        {
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(0.5F, 0.5F, 0.5F);
-            this.fontRenderer.drawString("Use mouse to rotate, scroll to zoom", 56, 38, 0xFFFFFF);
-            GlStateManager.popMatrix();
-        }
-
-        // Render tooltips for attachment slots
-        for(int i = 0; i < IAttachment.Type.values().length; i++)
-        {
-            Slot slot = this.container.getSlot(i);
-            if(isPointInRegion(slot.xPos, slot.yPos, 16, 16, mouseX, mouseY))
-            {
-                IAttachment.Type type = IAttachment.Type.values()[i];
-                if(!slot.isEnabled())
-                {
-                    this.drawHoveringText(Arrays.asList("slot.cgm.attachment." + type.getName(), TextFormatting.RED + "Not applicable"), mouseX - this.guiLeft, mouseY - this.guiTop);
-                }
-                else if(slot instanceof SlotAttachment && slot.getStack().isEmpty() && !this.isCompatible(this.mc.player.inventory.getItemStack(), (SlotAttachment) slot))
-                {
-                    this.drawHoveringText(Arrays.asList(TextFormatting.YELLOW + "Incompatible"), mouseX - this.guiLeft, mouseY - this.guiTop);
-                }
-                else if(slot.getStack().isEmpty())
-                {
-                    this.drawHoveringText(Collections.singletonList("slot.cgm.attachment." + type.getName()), mouseX - this.guiLeft, mouseY - this.guiTop);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-    {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(GUI_TEXTURES);
-        int left = (this.width - this.xSize) / 2;
-        int top = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(left, top, 0, 0, this.xSize, this.ySize);
-
         // Draw icons for each attachment slot
         for(int i = 0; i < IAttachment.Type.values().length; i++)
         {
@@ -234,8 +216,7 @@ public class GuiAttachment extends GuiContainer
 
     private boolean canPlaceAttachmentInSlot(ItemStack stack, Slot slot)
     {
-        if(!slot.isEnabled()) return false;
-
+        // All slots are always enabled, so we skip that check
         if(!slot.getStack().isEmpty()) return true;
 
         if(!(slot instanceof SlotAttachment)) return true;
@@ -263,69 +244,4 @@ public class GuiAttachment extends GuiContainer
         return slot.isItemValid(stack);
     }
 
-    @Override
-    public void handleMouseInput() throws IOException
-    {
-        super.handleMouseInput();
-        int startX = (this.width - this.xSize) / 2;
-        int startY = (this.height - this.ySize) / 2;
-        int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-        int scroll = Mouse.getEventDWheel();
-
-        if(isPointInRegion(startX + 26, startY + 17, 142, 70, mouseX, mouseY))
-        {
-            if(scroll < 0 && this.windowZoom > 0)
-            {
-                this.showHelp = false;
-                this.windowZoom--;
-            }
-            else if(scroll > 0)
-            {
-                this.showHelp = false;
-                this.windowZoom++;
-            }
-        }
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-    {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        int startX = (this.width - this.xSize) / 2;
-        int startY = (this.height - this.ySize) / 2;
-
-        if(isPointInRegion(startX + 26, startY + 17, 142, 70, mouseX, mouseY))
-        {
-            if(!this.mouseGrabbed && (mouseButton == 0 || mouseButton == 1))
-            {
-                this.mouseGrabbed = true;
-                this.mouseGrabbedButton = mouseButton == 1 ? 1 : 0;
-                this.mouseClickedX = mouseX;
-                this.mouseClickedY = mouseY;
-                this.showHelp = false;
-            }
-        }
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state)
-    {
-        super.mouseReleased(mouseX, mouseY, state);
-        if(this.mouseGrabbed)
-        {
-            if(this.mouseGrabbedButton == 0 && state == 0)
-            {
-                this.mouseGrabbed = false;
-                this.windowX += (mouseX - this.mouseClickedX - 1);
-                this.windowY += (mouseY - this.mouseClickedY);
-            }
-            else if(this.mouseGrabbedButton == 1 && state == 1)
-            {
-                this.mouseGrabbed = false;
-                this.windowRotationX += (mouseX - this.mouseClickedX);
-                this.windowRotationY -= (mouseY - this.mouseClickedY);
-            }
-        }
-    }
 }

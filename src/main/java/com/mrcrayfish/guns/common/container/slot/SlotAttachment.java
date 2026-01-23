@@ -39,13 +39,8 @@ public class SlotAttachment extends Slot
     @Override
     public boolean isEnabled()
     {
-        if(!(this.weapon.getItem() instanceof ItemGun))
-        {
-            return false;
-        }
-        ItemGun item = (ItemGun) this.weapon.getItem();
-        Gun gun = item.getModifiedGun(this.weapon);
-        return gun.canAttachType(this.type);
+        // Always enable all attachment slots
+        return true;
     }
 
     @Override
