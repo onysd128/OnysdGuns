@@ -1,5 +1,5 @@
 # Onysd Guns
-
+![Minecraft](https://shorturl.at/LiBIk)<br><br>
 👋 Hi! It's my unofficial continuation of MrCrayfish's Gun Mod.  
 🏗️ Here I'm fixing issues, creating new content and developing new features.  
 📝 I plan to maintain mod only for 1.12.2 version of Minecraft. Don't ask for another versions ;)  
