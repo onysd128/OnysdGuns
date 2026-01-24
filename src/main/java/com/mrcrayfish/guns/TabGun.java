@@ -2,6 +2,8 @@ package com.mrcrayfish.guns;
 
 import com.mrcrayfish.guns.init.ModBlocks;
 import com.mrcrayfish.guns.init.ModGuns;
+import com.mrcrayfish.guns.item.ItemGun;
+import com.mrcrayfish.guns.ItemStackUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -16,6 +18,16 @@ public class TabGun extends CreativeTabs
 	@Override
 	public ItemStack createIcon()
 	{
+		if(ModGuns.BAZOOKA != null && ModGuns.BAZOOKA instanceof ItemGun)
+		{
+			ItemStack stack = new ItemStack(ModGuns.BAZOOKA);
+			ItemGun bazooka = (ItemGun) ModGuns.BAZOOKA;
+			ItemStackUtil.createTagCompound(stack).setInteger("AmmoCount", bazooka.getGun().general.maxAmmo);
+			// Set color for the icon (example: red color - 0xFF0000)
+			// You can change this to any RGB color value
+			((ItemGun) ModGuns.BAZOOKA).setColor(stack, 0xFFA500); // Red color
+			return stack;
+		}
 		return new ItemStack(ModGuns.PISTOL);
 	}
 
