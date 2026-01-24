@@ -5,6 +5,8 @@
 📝 I plan to maintain mod only for 1.12.2 version of Minecraft. Don't ask for another versions ;)  
 🤯 I'm open for new ideas and suggestions, so don't afraid to contact me!
 
+⚠️ Important: This mod requires **[Obfuscate](https://www.curseforge.com/minecraft/mc-mods/obfuscate)** library to work!
+
 🌐 Also check original mod from MrCrayfish [here](https://github.com/MrCrayfish/MrCrayfishGunMod).
 
 # Full Changes List
