@@ -37,6 +37,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -246,6 +249,13 @@ public class ClientProxy extends CommonProxy
 				Entity entity = mc.objectMouseOver.entityHit;
 				if(entity != null)
 				{
+					// Check if entity is mountable (horses, boats, minecarts)
+					if(entity instanceof EntityHorse || entity instanceof EntityBoat || entity instanceof EntityMinecart)
+					{
+						return true;
+					}
+					
+					// Check for other interactable entities
 					if(entity.processInitialInteract(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND))
 					{
 						return true;
