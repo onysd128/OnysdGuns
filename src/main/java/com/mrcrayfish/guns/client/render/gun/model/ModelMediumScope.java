@@ -91,10 +91,11 @@ public class ModelMediumScope implements IOverrideModel
                     GlStateManager.color(1.0F, 1.0F, 1.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
                     GlStateManager.pushMatrix();
                     {
-                        /* Keep the reticle at the size the user approved (it used to be size * 0.045
-                         * when the screen was the old 2.0 aperture). */
-                        double ringSize = (2.0 / 16.0) * 0.045;
-                        double dotSize = ringSize * 0.5;
+                        /* Base reticle size approved earlier (size * 0.045 when the screen was the
+                         * old 2.0 aperture). Ring enlarged ~1.25x, centre dot shrunk and tinted red. */
+                        double base = (2.0 / 16.0) * 0.045;
+                        double ringSize = base * 1.25;
+                        double dotSize = base * 0.3;
                         mc.getTextureManager().bindTexture(RETICLE);
                         GlStateManager.pushMatrix();
                         {
@@ -107,6 +108,8 @@ public class ModelMediumScope implements IOverrideModel
                             tessellator.draw();
                         }
                         GlStateManager.popMatrix();
+                        /* Centre dot: tint the white reticle pixel red. */
+                        GlStateManager.color(1.0F, 0.0F, 0.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
                         GlStateManager.pushMatrix();
                         {
                             GlStateManager.translate((size - dotSize) / 2, (size - dotSize) / 2, 0.0002);
