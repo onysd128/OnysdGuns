@@ -6,7 +6,9 @@
         "gripType": "one_handed",
         "maxAmmo": 30,
         "reloadSpeed": 5,
+        "recoilAngle": 4.0,
         "recoilKick": 0.25,
+        "recoilAdsReduction": 0.5,
         "spread": 4.0
     },
     "projectile": {

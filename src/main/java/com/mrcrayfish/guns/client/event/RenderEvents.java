@@ -143,10 +143,6 @@ public class RenderEvents
     private float fallSway;
     private float prevFallSway;
 
-    /* Smoothed walk speed used as the bobbing amplitude */
-    private float bob;
-    private float prevBob;
-
     /* Smoothed head rotation used as the sway lag reference */
     private float bobPitch;
     private float prevBobPitch;
@@ -317,10 +313,12 @@ public class RenderEvents
             this.bobPitch += MathHelper.wrapDegrees(player.rotationPitch - this.bobPitch) * 0.5F;
             this.prevBobYaw = this.bobYaw;
             this.bobYaw += MathHelper.wrapDegrees(player.rotationYawHead - this.bobYaw) * 0.5F;
-
-            this.prevBob = this.bob;
-            float horizontalSpeed = MathHelper.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ);
-            this.bob += (Math.min(horizontalSpeed, 0.5F) - this.bob) * 0.5F;
+            /* Keep the smoothed yaw bounded to (-180, 180]. Because the increment above uses
+             * wrapDegrees on the *difference*, the value would otherwise converge to any angle
+             * congruent with the head yaw. After the player crosses the +/-180 boundary it can
+             * settle a full 360 away, making headYaw - bobYaw equal +/-360 and permanently
+             * skewing the whole weapon + arms assembly. See applySwayTransforms. */
+            this.bobYaw = MathHelper.wrapDegrees(this.bobYaw);
         }
     }
 
@@ -424,6 +422,11 @@ public class RenderEvents
         /* Translate the item position based on the hand side */
         GlStateManager.translate(0.5602F - (right ? 0.0F : 0.72F), -0.55625F, -0.72F);
 
+        /* Moves the weapon higher and closer to the body while idle. Fades out while
+         * aiming/zooming (normalZoomProgress -> 1) so the scope/iron sight position
+         * stays exactly centered during ADS. */
+        GlStateManager.translate(0, (1.0 - this.normalZoomProgress) * 0.06F, (1.0 - this.normalZoomProgress) * 0.08F);
+
         /* Pivot values match the model's own first person translation so the weapon
          * tilts around its own centre during aiming and swaying */
         float pivotX = model.getItemCameraTransforms().firstperson_right.translation.getX() * 0.0625F * scaleX;
@@ -502,8 +505,13 @@ public class RenderEvents
             float deltaDistanceWalked = player.distanceWalkedModified - player.prevDistanceWalkedModified;
             float distanceWalked = -(player.distanceWalkedModified + deltaDistanceWalked * partialTicks);
 
-            /* Reverses the vanilla camera bob inherited by the hand so it can be controlled */
-            float bobbing = lerp(partialTicks, this.prevBob, this.bob);
+            /* Reverses the vanilla camera bob inherited by the hand. The vanilla bob
+             * (EntityRenderer.setupViewBobbing) is driven by cameraYaw (<= 0.1) and
+             * cameraPitch, not by the raw walk speed, so the reversal must use those
+             * same amplitudes to fully cancel it (this is what 1.19's player.bob is). */
+            float bobbing = lerp(partialTicks, player.prevCameraYaw, player.cameraYaw);
+            float pitchBob = lerp(partialTicks, player.prevCameraPitch, player.cameraPitch);
+            GlStateManager.rotate(-pitchBob, 1, 0, 0);
             GlStateManager.rotate(-(MathHelper.abs(MathHelper.cos(distanceWalked * (float) Math.PI - 0.2F) * bobbing) * 5.0F), 1, 0, 0);
             GlStateManager.rotate(-(MathHelper.sin(distanceWalked * (float) Math.PI) * bobbing * 3.0F), 0, 0, 1);
             GlStateManager.translate(-(MathHelper.sin(distanceWalked * (float) Math.PI) * bobbing * 0.5F), -(-MathHelper.abs(MathHelper.cos(distanceWalked * (float) Math.PI) * bobbing)), 0);
@@ -551,13 +559,16 @@ public class RenderEvents
 
         float bobPitch = rotLerp(partialTicks, this.prevBobPitch, this.bobPitch);
         float headPitch = rotLerp(partialTicks, player.prevRotationPitch, player.rotationPitch);
-        float swayPitch = headPitch - bobPitch;
+        float swayPitch = MathHelper.wrapDegrees(headPitch - bobPitch);
         swayPitch *= (float) (1.0 - 0.5 * this.normalZoomProgress);
         GlStateManager.rotate(swayPitch * (float) GunConfig.CLIENT.display.swaySensitivity * GunConfig.CLIENT.display.getSwayType().getPitchDirection(), 1, 0, 0);
 
         float bobYaw = rotLerp(partialTicks, this.prevBobYaw, this.bobYaw);
         float headYaw = rotLerp(partialTicks, player.prevRotationYawHead, player.rotationYawHead);
-        float swayYaw = headYaw - bobYaw;
+        /* Always take the shortest angular difference: headYaw and bobYaw can otherwise sit on
+         * opposite sides of the +/-180 boundary and differ by a full 360, which rotates the
+         * entire first person assembly by ~108 degrees (360 * swaySensitivity). */
+        float swayYaw = MathHelper.wrapDegrees(headYaw - bobYaw);
         swayYaw *= (float) (1.0 - 0.5 * this.normalZoomProgress);
         GlStateManager.rotate(swayYaw * (float) GunConfig.CLIENT.display.swaySensitivity * GunConfig.CLIENT.display.getSwayType().getYawDirection(), 0, 1, 0);
 
@@ -1098,6 +1109,9 @@ public class RenderEvents
             GlStateManager.translate(0, 0, -1);
             GlStateManager.rotate(180F, 0, 1, 0);
 
+            /* Front arm holding the barrel */
+            GlStateManager.pushMatrix();
+
             float reloadProgress = (prevReloadTimer + (reloadTimer - prevReloadTimer) * partialTicks) / 5F;
             /* Ported from 1.19 TwoHandedPose: the front arm moves down, back and side while reloading */
             GlStateManager.translate(reloadProgress * 0.5F, -reloadProgress, -reloadProgress * 0.5F);
@@ -1117,6 +1131,23 @@ public class RenderEvents
 
             GlStateManager.scale(0.5, 0.5, 0.5);
             this.renderArm(hand.opposite(), 0.0625F);
+
+            GlStateManager.popMatrix();
+
+            /* Back arm holding the handle. Ported from 1.15.X TwoHandedPose.renderFirstPersonArms,
+             * which is the same source the 1.19 pose was derived from. */
+            double centerOffset = 2.5;
+            if(Minecraft.getMinecraft().player.getSkinType().equals("slim"))
+            {
+                centerOffset += hand == EnumHandSide.RIGHT ? 0.2 : 0.8;
+            }
+            centerOffset = hand == EnumHandSide.RIGHT ? -centerOffset : centerOffset;
+            GlStateManager.translate(centerOffset * 0.0625, -0.4, -0.975);
+
+            GlStateManager.rotate(80F, 1, 0, 0);
+
+            GlStateManager.scale(0.5, 0.5, 0.5);
+            this.renderArm(hand, 0.0625F);
         }
         else if(gun.general.gripType == GripType.ONE_HANDED)
         {
