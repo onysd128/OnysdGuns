@@ -92,9 +92,9 @@ public class ModelMediumScope implements IOverrideModel
                     GlStateManager.pushMatrix();
                     {
                         /* Base reticle size approved earlier (size * 0.045 when the screen was the
-                         * old 2.0 aperture). Ring enlarged ~1.25x, centre dot shrunk and tinted red. */
+                         * old 2.0 aperture). Ring enlarged ~1.6x, centre dot shrunk and tinted red. */
                         double base = (2.0 / 16.0) * 0.045;
-                        double ringSize = base * 1.25;
+                        double ringSize = base * 1.6;
                         double dotSize = base * 0.3;
                         mc.getTextureManager().bindTexture(RETICLE);
                         GlStateManager.pushMatrix();
