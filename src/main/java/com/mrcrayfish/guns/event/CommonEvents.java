@@ -15,6 +15,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.HashMap;
@@ -49,6 +50,8 @@ public class CommonEvents
     }
 
     private Map<UUID, ReloadTracker> reloadTrackerMap = new HashMap<>();
+
+    private Map<UUID, CockSoundTask> cockSoundTaskMap = new HashMap<>();
 
     @SubscribeEvent
     public void onPlayerInit(EntityEvent.EntityConstructing event)
@@ -91,8 +94,15 @@ public class CommonEvents
                     {
                         reloadTrackerMap.remove(player.getUniqueID());
                         player.getDataManager().set(RELOADING, false);
+                        this.scheduleCockSound(player, tracker.gun);
                     }
                 }
+            }
+            CockSoundTask cockSoundTask = this.cockSoundTaskMap.get(player.getUniqueID());
+            if(cockSoundTask != null && --cockSoundTask.delay <= 0)
+            {
+                this.cockSoundTaskMap.remove(player.getUniqueID());
+                playCockSound(player, cockSoundTask.sound);
             }
             getCooldownTracker(player.getUniqueID()).tick();
         }
@@ -164,6 +174,57 @@ public class CommonEvents
             {
                 player.world.playSound(null, player.posX, player.posY + 1.0D, player.posZ, event, SoundCategory.PLAYERS, 1.0F, 1.0F);
             }
+        }
+    }
+
+    /**
+     * Schedules the cock sound to play a few ticks after the reload finished,
+     * the same way as the 1.19 version racks the bolt at the very end of the
+     * reload.
+     */
+    private void scheduleCockSound(EntityPlayer player, Gun gun)
+    {
+        String cockSound = gun.sounds.getCock(gun);
+        if(cockSound != null && !cockSound.isEmpty())
+        {
+            this.cockSoundTaskMap.put(player.getUniqueID(), new CockSoundTask(cockSound));
+        }
+    }
+
+    private static void playCockSound(EntityPlayer player, String cockSound)
+    {
+        if(!player.isEntityAlive())
+        {
+            return;
+        }
+        SoundEvent event = ModSounds.getSound(cockSound);
+        if(event == null)
+        {
+            event = SoundEvent.REGISTRY.getObject(new ResourceLocation(cockSound));
+        }
+        if(event != null)
+        {
+            player.world.playSound(null, player.posX, player.posY + 1.0D, player.posZ, event, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event)
+    {
+        UUID playerId = event.player.getUniqueID();
+        this.reloadTrackerMap.remove(playerId);
+        this.cockSoundTaskMap.remove(playerId);
+    }
+
+    private static class CockSoundTask
+    {
+        private final String sound;
+        private int delay;
+
+        private CockSoundTask(String sound)
+        {
+            this.sound = sound;
+            this.delay = 4;
         }
     }
 }

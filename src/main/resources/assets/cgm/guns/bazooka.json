@@ -14,14 +14,13 @@
         "damage": 25.0,
         "size": 0.2,
         "speed": 2,
-        "life": 100,
+        "life": 150,
         "damageReduceOverLife": false,
         "damageReduceIfNotZoomed": false
     },
     "sounds": {
         "fire": "cgm:bazooka_fire",
-        "reload": "cgm:pistol_reload",
-        "cock": "cgm:shotgun_fire"
+        "reload": "cgm:pistol_reload"
     },
     "display": {
         "flash": {

@@ -33,6 +33,10 @@ public class ModSounds
 		register("heavy_rifle_fire");
 		register("heavy_rifle_fire_silenced");
 		register("heavy_rifle_cock");
+		register("assault_rifle_cock");
+		register("pistol_cock");
+		register("rifle_cock");
+		register("shotgun_cock");
 		register("ui_weapon_attach");
 	}
 

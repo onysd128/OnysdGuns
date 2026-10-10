@@ -4,25 +4,26 @@
         "auto": true,
         "rate": 2,
         "gripType": "one_handed",
-        "maxAmmo": 30,
-        "reloadSpeed": 5,
+        "maxAmmo": 80,
+        "reloadSpeed": 20,
         "recoilAngle": 4.0,
         "recoilKick": 0.25,
         "recoilAdsReduction": 0.5,
-        "spread": 4.0
+        "alwaysSpread": true,
+        "spread": 6.0
     },
     "projectile": {
         "item": "cgm:basic_ammo",
         "visible": false,
-        "damage": 5.0,
+        "damage": 3.0,
         "size": 0.2,
         "speed": 10.0,
-        "life": 10
+        "life": 20
     },
     "sounds": {
         "fire": "cgm:machine_pistol_fire",
         "reload": "cgm:pistol_reload",
-        "cock": "cgm:shotgun_fire",
+        "cock": "cgm:rifle_cock",
         "silencedFire": "cgm:machine_pistol_fire_silenced"
     },
     "display": {

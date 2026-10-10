@@ -2,25 +2,26 @@
     "id": "assault_rifle",
     "general": {
         "auto": true,
-        "rate": 4,
+        "rate": 3,
         "gripType": "two_handed",
-        "maxAmmo": 30,
-        "reloadSpeed": 2,
+        "maxAmmo": 40,
+        "reloadSpeed": 10,
         "recoilAngle": 3.0,
-        "recoilKick": 0.25
+        "recoilKick": 0.25,
+        "spread": 4.0
     },
     "projectile": {
         "item": "cgm:basic_ammo",
         "visible": false,
-        "damage": 6.0,
+        "damage": 6.5,
         "size": 0.2,
         "speed": 10.0,
-        "life": 10
+        "life": 25
     },
     "sounds": {
         "fire": "cgm:assault_rifle_fire",
         "reload": "cgm:pistol_reload",
-        "cock": "cgm:shotgun_fire",
+        "cock": "cgm:assault_rifle_cock",
         "silencedFire": "cgm:rifle_fire_silenced"
     },
     "display": {

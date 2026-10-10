@@ -1,24 +1,28 @@
 {
     "id": "handgun",
     "general": {
-        "rate": 12,
+        "rate": 4,
         "gripType": "one_handed",
-        "maxAmmo": 15,
-        "recoilAngle": 15.0
+        "maxAmmo": 16,
+        "reloadSpeed": 4,
+        "recoilAngle": 10.0,
+        "recoilAdsReduction": 0.5,
+        "alwaysSpread": true,
+        "spread": 1.0
     },
     "projectile": {
         "item": "cgm:basic_ammo",
         "visible": false,
-        "damage": 10.0,
+        "damage": 9.0,
         "size": 0.2,
         "speed": 10.0,
-        "life": 10,
-        "damageReduceOverLife": true
+        "life": 25,
+        "damageReduceOverLife": false
     },
     "sounds": {
         "fire": "cgm:pistol_fire",
         "reload": "cgm:pistol_reload",
-        "cock": "cgm:shotgun_fire",
+        "cock": "cgm:pistol_cock",
         "silencedFire": "cgm:pistol_fire_silenced"
     },
     "display": {
