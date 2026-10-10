@@ -491,23 +491,24 @@ public class RenderEvents
 
     /**
      * Reverses the vanilla camera bob and applies the 1.19 weapon bobbing instead.
+     * Ported 1:1 from 1.19 applyBobbingTransforms: the reversal multiplies the small
+     * bobbing amplitude (bounded 0..0.5) inside sin/cos, never the raw accumulated
+     * walk distance, so the weapon never drifts sideways.
      */
     private void applyBobbingTransforms(EntityPlayer player, float partialTicks)
     {
         if(Minecraft.getMinecraft().gameSettings.viewBobbing && player != null)
         {
-            /* Computes the same values as the vanilla camera bob so it can be undone */
             float deltaDistanceWalked = player.distanceWalkedModified - player.prevDistanceWalkedModified;
             float distanceWalked = -(player.distanceWalkedModified + deltaDistanceWalked * partialTicks);
-            float cameraYaw = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
-            float cameraPitch = player.prevCameraPitch + (player.cameraPitch - player.prevCameraPitch) * partialTicks;
 
-            /* Reverses the vanilla camera bob applied by EntityRenderer so it can be controlled */
-            GlStateManager.rotate(-cameraYaw, 0, 1, 0);
-            GlStateManager.translate(-distanceWalked * cameraYaw * 0.25F, cameraPitch * MathHelper.abs(cameraYaw) * 0.25F, 0);
+            /* Reverses the vanilla camera bob inherited by the hand so it can be controlled */
+            float bobbing = lerp(partialTicks, this.prevBob, this.bob);
+            GlStateManager.rotate(-(MathHelper.abs(MathHelper.cos(distanceWalked * (float) Math.PI - 0.2F) * bobbing) * 5.0F), 1, 0, 0);
+            GlStateManager.rotate(-(MathHelper.sin(distanceWalked * (float) Math.PI) * bobbing * 3.0F), 0, 0, 1);
+            GlStateManager.translate(-(MathHelper.sin(distanceWalked * (float) Math.PI) * bobbing * 0.5F), -(-MathHelper.abs(MathHelper.cos(distanceWalked * (float) Math.PI) * bobbing)), 0);
 
             /* The new controlled bobbing */
-            float bobbing = lerp(partialTicks, this.prevBob, this.bob);
             bobbing *= player.isSprinting() ? 8.0F : 4.0F;
             bobbing *= (float) GunConfig.CLIENT.display.bobbingIntensity;
 
