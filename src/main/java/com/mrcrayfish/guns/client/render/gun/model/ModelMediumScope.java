@@ -53,37 +53,44 @@ public class ModelMediumScope implements IOverrideModel
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
-                double scopeSize = 2.0;
+                /* Match the ported 1.19 medium scope tube aperture: the inner opening of the
+                 * tube is 1.2485 blocks wide, with the four corners bevelled by 0.2485. */
+                double scopeSize = 1.2485;
                 double size = scopeSize / 16.0;
-                double offset = 0.58 / 16.0;
+                double cut = 0.2485;
+                double offset = cut / 16.0;
+                double cornerRatio = cut / scopeSize;
                 double crop = 0.4;
                 Minecraft mc = Minecraft.getMinecraft();
                 int kickAmount = ClientProxy.renderEvents.recoilAngle > 0 ? 50 : 0;
                 double texOffset = ClientProxy.renderEvents.recoilNormal * kickAmount * (1.0 / mc.displayHeight);
                 double texU = ((mc.displayWidth - mc.displayHeight + mc.displayHeight * crop * 2.0) / 2.0) / mc.displayWidth;
-                double texScaleX = (1.0 - texU * 2) / scopeSize;
-                double texScaleY = (1.0 - crop * 2) / scopeSize;
+                double texSpanX = 1.0 - texU * 2;
+                double texSpanY = 1.0 - crop * 2;
+                double centerY = 9.625 / 16.0 - 0.5;
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.translate(-size / 2, 0.625 * 0.0625, 1.4 * 0.0625);
+                    GlStateManager.translate(-size / 2, centerY - size / 2, 1.4 * 0.0625);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder buffer = tessellator.getBuffer();
                     buffer.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-                    buffer.pos(offset, 0, 0).tex(texU + 0.58 * texScaleX, crop + texOffset).endVertex();
-                    buffer.pos(size - offset, 0, 0).tex(1.0 - texU - 0.58 * texScaleX, crop + texOffset).endVertex();
-                    buffer.pos(size, offset, 0).tex(1.0 - texU, crop + texOffset + 0.58 * texScaleY).endVertex();
-                    buffer.pos(size, size - offset, 0).tex(1.0 - texU, 1.0 - crop + texOffset - 0.58 * texScaleY).endVertex();
-                    buffer.pos(size - offset, size, 0).tex(1.0 - texU - 0.58 * texScaleX, 1.0 - crop + texOffset).endVertex();
-                    buffer.pos(offset, size, 0).tex(texU + 0.58 * texScaleX, 1.0 - crop + texOffset).endVertex();
-                    buffer.pos(0, size - offset, 0).tex(texU, 1.0 - crop + texOffset - 0.58 * texScaleY).endVertex();
-                    buffer.pos(0, offset, 0).tex(texU, crop + texOffset + 0.58 * texScaleY).endVertex();
+                    buffer.pos(offset, 0, 0).tex(texU + cornerRatio * texSpanX, crop + texOffset).endVertex();
+                    buffer.pos(size - offset, 0, 0).tex(1.0 - texU - cornerRatio * texSpanX, crop + texOffset).endVertex();
+                    buffer.pos(size, offset, 0).tex(1.0 - texU, crop + texOffset + cornerRatio * texSpanY).endVertex();
+                    buffer.pos(size, size - offset, 0).tex(1.0 - texU, 1.0 - crop + texOffset - cornerRatio * texSpanY).endVertex();
+                    buffer.pos(size - offset, size, 0).tex(1.0 - texU - cornerRatio * texSpanX, 1.0 - crop + texOffset).endVertex();
+                    buffer.pos(offset, size, 0).tex(texU + cornerRatio * texSpanX, 1.0 - crop + texOffset).endVertex();
+                    buffer.pos(0, size - offset, 0).tex(texU, 1.0 - crop + texOffset - cornerRatio * texSpanY).endVertex();
+                    buffer.pos(0, offset, 0).tex(texU, crop + texOffset + cornerRatio * texSpanY).endVertex();
                     tessellator.draw();
 
                     GlStateManager.color(1.0F, 1.0F, 1.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
                     GlStateManager.pushMatrix();
                     {
-                        double ringSize = size * 0.045;
+                        /* Keep the reticle at the size the user approved (it used to be size * 0.045
+                         * when the screen was the old 2.0 aperture). */
+                        double ringSize = (2.0 / 16.0) * 0.045;
                         double dotSize = ringSize * 0.5;
                         mc.getTextureManager().bindTexture(RETICLE);
                         GlStateManager.pushMatrix();
@@ -115,14 +122,14 @@ public class ModelMediumScope implements IOverrideModel
                     GlStateManager.translate(0, 0, 0.0001);
                     mc.getTextureManager().bindTexture(VIGNETTE);
                     buffer.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
-                    buffer.pos(offset, 0, 0).tex(0.58 / 2, 1.0).endVertex();
-                    buffer.pos(size - offset, 0, 0).tex(1.0 - 0.58 / 2, 1.0).endVertex();
-                    buffer.pos(size, offset, 0).tex(1.0, 1.0 - 0.58 / 2).endVertex();
-                    buffer.pos(size, size - offset, 0).tex(1.0, 0.58 / 2).endVertex();
-                    buffer.pos(size - offset, size, 0).tex(1.0 - 0.58 / 2, 0.0).endVertex();
-                    buffer.pos(offset, size, 0).tex(0.58 / 2, 0.0).endVertex();
-                    buffer.pos(0, size - offset, 0).tex(0.0, 0.58 / 2).endVertex();
-                    buffer.pos(0, offset, 0).tex(0.0, 1.0 - 0.58 / 2).endVertex();
+                    buffer.pos(offset, 0, 0).tex(cornerRatio, 1.0).endVertex();
+                    buffer.pos(size - offset, 0, 0).tex(1.0 - cornerRatio, 1.0).endVertex();
+                    buffer.pos(size, offset, 0).tex(1.0, 1.0 - cornerRatio).endVertex();
+                    buffer.pos(size, size - offset, 0).tex(1.0, cornerRatio).endVertex();
+                    buffer.pos(size - offset, size, 0).tex(1.0 - cornerRatio, 0.0).endVertex();
+                    buffer.pos(offset, size, 0).tex(cornerRatio, 0.0).endVertex();
+                    buffer.pos(0, size - offset, 0).tex(0.0, cornerRatio).endVertex();
+                    buffer.pos(0, offset, 0).tex(0.0, 1.0 - cornerRatio).endVertex();
                     tessellator.draw();
                 }
                 GlStateManager.popMatrix();

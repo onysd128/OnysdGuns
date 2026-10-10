@@ -54,7 +54,7 @@ public class ModelLongScope implements IOverrideModel
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
-                double size = 1.2 / 16.0;
+                double size = 1.1 / 16.0;
                 double crop = 0.425;
                 Minecraft mc = Minecraft.getMinecraft();
                 int kickAmount = ClientProxy.renderEvents.recoilAngle > 0 ? 50 : 0;
@@ -63,7 +63,8 @@ public class ModelLongScope implements IOverrideModel
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.translate(-size / 2, 0.8 * 0.0625, 2.3 * 0.0625);
+                    /* Centre on the ported 1.19 long scope aperture (8, 9.4), which is 1.1 blocks. */
+                    GlStateManager.translate(-size / 2, (9.4 / 16.0 - 0.5) - size / 2, 2.3 * 0.0625);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder buffer = tessellator.getBuffer();
                     buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
