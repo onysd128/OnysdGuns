@@ -146,6 +146,8 @@ subtitle.cgm.fire=Постріл
 subtitle.cgm.fire.silenced=Приглушений постріл
 subtitle.cgm.reload=Перезарядка
 subtitle.cgm.cock=Взведення затвора
+subtitle.cgm.grenade.pin=Чека гранати
+subtitle.cgm.attach=Зміна додатків
 
 container.cgm.attachments=Змінити додатки
 container.cgm.attachments.window_help=Натисніть, щоб перемістити та обернути

@@ -1,6 +1,9 @@
 package com.mrcrayfish.guns.item;
 
+import com.mrcrayfish.guns.MrCrayfishGunMod;
+import com.mrcrayfish.guns.Reference;
 import com.mrcrayfish.guns.entity.EntityThrowableGrenade;
+import com.mrcrayfish.guns.init.ModSounds;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -9,6 +12,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 /**
@@ -38,6 +43,15 @@ public class ItemGrenade extends ItemAmmo
     {
         ItemStack stack = playerIn.getHeldItem(handIn);
         playerIn.setActiveHand(handIn);
+        if(worldIn.isRemote)
+        {
+            // Play the pin being pulled as the player prepares to throw the grenade
+            SoundEvent sound = ModSounds.getSound(Reference.MOD_ID + ":grenade_pin");
+            if(sound != null)
+            {
+                MrCrayfishGunMod.proxy.playClientSound(playerIn.posX, playerIn.posY, playerIn.posZ, sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            }
+        }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 

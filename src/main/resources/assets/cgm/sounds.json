@@ -16,5 +16,7 @@
    "machine_pistol_fire_silenced": { "subtitle": "subtitle.cgm.fire.silenced",           "sounds": [{ "name": "cgm:machine_pistol_fire_silenced" }]},
    "heavy_rifle_fire":             { "subtitle": "subtitle.cgm.fire",           "sounds": [{ "name": "cgm:heavy_rifle_fire" }]},
    "heavy_rifle_fire_silenced":    { "subtitle": "subtitle.cgm.fire.silenced",  "sounds": [{ "name": "cgm:heavy_rifle_fire_silenced" }]},
-   "heavy_rifle_cock":             { "subtitle": "subtitle.cgm.cock",          "sounds": [{ "name": "cgm:heavy_rifle_cock" }]}
+   "heavy_rifle_cock":             { "subtitle": "subtitle.cgm.cock",          "sounds": [{ "name": "cgm:heavy_rifle_cock" }]},
+   "grenade_pin":                  { "subtitle": "subtitle.cgm.grenade.pin",   "sounds": [{ "name": "cgm:grenade_pin" }]},
+   "ui_weapon_attach":             { "subtitle": "subtitle.cgm.attach",        "sounds": [{ "name": "cgm:ui_weapon_attach" }]}
 }

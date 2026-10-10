@@ -27,6 +27,7 @@ public class ModSounds
 		register("pistol_reload");
 		register("grenade_stun_explosion");
 		register("grenade_stun_ring");
+		register("grenade_pin");
 		register("machine_pistol_fire");
 		register("machine_pistol_fire_silenced");
 		register("heavy_rifle_fire");

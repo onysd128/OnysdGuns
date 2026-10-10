@@ -145,6 +145,8 @@ subtitle.cgm.fire=Gunfire
 subtitle.cgm.fire.silenced=Silenced gunfire
 subtitle.cgm.reload=Reloading
 subtitle.cgm.cock=Cocking
+subtitle.cgm.grenade.pin=Grenade Pin
+subtitle.cgm.attach=Attachment Attach
 
 container.cgm.attachments=Modify Attachments
 container.cgm.attachments.window_help=Click to move and rotate
