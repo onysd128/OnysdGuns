@@ -1,0 +1,56 @@
+{
+    "id": "heavy_rifle",
+    "general": {
+        "rate": 40,
+        "gripType": "two_handed",
+        "maxAmmo": 4,
+        "recoilAngle": 10.0,
+        "recoilKick": 1.0,
+        "recoilDurationOffset": 0.5,
+        "alwaysSpread": true,
+        "spread": 1.0
+    },
+    "projectile": {
+        "item": "cgm:advanced_ammo",
+        "visible": false,
+        "gravity": true,
+        "damage": 18.0,
+        "size": 0.0625,
+        "speed": 25.0,
+        "life": 30
+    },
+    "sounds": {
+        "fire": "cgm:heavy_rifle_fire",
+        "reload": "cgm:pistol_reload",
+        "cock": "cgm:heavy_rifle_cock",
+        "silencedFire": "cgm:heavy_rifle_fire_silenced"
+    },
+    "display": {
+        "flash": {
+            "xOffset": 0.0,
+            "yOffset": -4.4,
+            "zOffset": -9.41,
+            "scale": 0.5
+        }
+    },
+    "modules": {
+        "zoom": {
+            "fovModifier": 0.6,
+            "yOffset": 5.1,
+            "zOffset": -3.2
+        },
+        "attachments": {
+            "scope": {
+                "xOffset": 0.0,
+                "yOffset": 4.4,
+                "zOffset": 4.0
+            },
+            "barrel": {
+                "xOffset": 0.0,
+                "yOffset": 3.6,
+                "zOffset": -9.4,
+                "scale": 0.5
+            }
+        }
+    }
+}

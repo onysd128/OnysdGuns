@@ -9,6 +9,7 @@ item.cgm.chain_gun.name=Мініган
 item.cgm.rifle.name=Гвинтівка
 item.cgm.assault_rifle.name=Штурмова гвинтівка
 item.cgm.machine_pistol.name=Автоматичний пістолет
+item.cgm.heavy_rifle.name=Тяжка гвинтівка
 
 item.cgm.basic_ammo.name=Базовий боєприпас
 item.cgm.advanced_ammo.name=Покращений боєприпас
@@ -144,6 +145,7 @@ subtitle.cgm.stun.ring=Дзвін
 subtitle.cgm.fire=Постріл
 subtitle.cgm.fire.silenced=Приглушений постріл
 subtitle.cgm.reload=Перезарядка
+subtitle.cgm.cock=Взведення затвора
 
 container.cgm.attachments=Змінити додатки
 container.cgm.attachments.window_help=Натисніть, щоб перемістити та обернути

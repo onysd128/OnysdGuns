@@ -8,6 +8,7 @@ item.cgm.bazooka.name=Bazooka
 item.cgm.chain_gun.name=Minigun
 item.cgm.rifle.name=Fusil
 item.cgm.assault_rifle.name=Fusil d'Assaut
+item.cgm.heavy_rifle.name=Fusil lourd
 
 item.cgm.basic_ammo.name=Munition Basique
 item.cgm.advanced_ammo.name=Munition Avancée
@@ -112,3 +113,4 @@ subtitle.cgm.stun.ring=Résonance
 subtitle.cgm.fire=Coup de Feu
 subtitle.cgm.fire.silenced=Coup de feu étouffé
 subtitle.cgm.reload=Rechargement
+subtitle.cgm.cock=Armement

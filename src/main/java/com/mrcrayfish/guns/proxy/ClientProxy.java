@@ -124,6 +124,7 @@ public class ClientProxy extends CommonProxy
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.BAZOOKA), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 2.5F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.CHAIN_GUN), new DisplayProperty(0.0F, 0.55F, 0.1F, 0.0F, 0.0F, 0.0F, 2.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.ASSAULT_RIFLE), new DisplayProperty(0.0F, 0.55F, -0.15F, 0.0F, 0.0F, 0.0F, 3.0F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.HEAVY_RIFLE), new DisplayProperty(0.0F, 0.55F, -0.2F, 0.0F, 0.0F, 0.0F, 2.5F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.BASIC_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.ADVANCED_AMMO), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SHELL), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F));

@@ -9,6 +9,7 @@ item.cgm.chain_gun.name=Minigun
 item.cgm.rifle.name=Rifle
 item.cgm.assault_rifle.name=Assault Rifle
 item.cgm.machine_pistol.name=Machine Pistol
+item.cgm.heavy_rifle.name=Heavy Rifle
 
 item.cgm.basic_ammo.name=Basic Ammo
 item.cgm.advanced_ammo.name=Advanced Ammo
@@ -143,6 +144,7 @@ subtitle.cgm.stun.ring=Ringing
 subtitle.cgm.fire=Gunfire
 subtitle.cgm.fire.silenced=Silenced gunfire
 subtitle.cgm.reload=Reloading
+subtitle.cgm.cock=Cocking
 
 container.cgm.attachments=Modify Attachments
 container.cgm.attachments.window_help=Click to move and rotate

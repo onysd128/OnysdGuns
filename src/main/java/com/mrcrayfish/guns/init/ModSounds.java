@@ -29,6 +29,9 @@ public class ModSounds
 		register("grenade_stun_ring");
 		register("machine_pistol_fire");
 		register("machine_pistol_fire_silenced");
+		register("heavy_rifle_fire");
+		register("heavy_rifle_fire_silenced");
+		register("heavy_rifle_cock");
 		register("ui_weapon_attach");
 	}
 
