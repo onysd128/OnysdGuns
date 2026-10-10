@@ -45,7 +45,7 @@ public class ModelShortScope implements IOverrideModel
         {
             double size = 1.4 / 16.0;
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            GlStateManager.translate(-size / 2, 0.325 * 0.0625, -0.5 * 0.0625);
+            GlStateManager.translate(-size / 2, 0.85 * 0.0625, -0.35 * 0.0625);
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
             Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE);

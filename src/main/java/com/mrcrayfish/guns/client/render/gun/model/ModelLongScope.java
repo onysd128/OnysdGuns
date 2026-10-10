@@ -63,7 +63,7 @@ public class ModelLongScope implements IOverrideModel
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.translate(-size / 2, 0.0625, 3.8 * 0.0625);
+                    GlStateManager.translate(-size / 2, 0.8 * 0.0625, 0);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder buffer = tessellator.getBuffer();
                     buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

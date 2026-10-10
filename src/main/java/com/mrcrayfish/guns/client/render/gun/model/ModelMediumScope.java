@@ -66,7 +66,7 @@ public class ModelMediumScope implements IOverrideModel
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.translate(-size / 2, 1.1 * 0.0625, 1.5 * 0.0625);
+                    GlStateManager.translate(-size / 2, 0.625 * 0.0625, 0);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder buffer = tessellator.getBuffer();
                     buffer.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
