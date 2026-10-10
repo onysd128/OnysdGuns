@@ -468,7 +468,8 @@ public class RenderEvents
         this.recoilNormal = recoilNormal;
         this.recoilAngle = RecoilHandler.get().getGunRecoilAngle();
 
-        if(gun.canAttachType(IAttachment.Type.SCOPE) && !Gun.getScope(item).isEmpty())
+        ItemStack scope = Gun.getScope(item);
+        if(gun.canAttachType(IAttachment.Type.SCOPE) && scope != null && !scope.isEmpty())
         {
             recoilNormal -= recoilNormal * (0.5 * this.normalZoomProgress);
         }
