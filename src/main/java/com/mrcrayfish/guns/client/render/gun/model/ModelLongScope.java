@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class ModelLongScope implements IOverrideModel
 {
-    private static final ResourceLocation RETICLE = new ResourceLocation(Reference.MOD_ID, "textures/blocks/sniper_reticle.png");
+    private static final ResourceLocation RETICLE = new ResourceLocation(Reference.MOD_ID, "textures/effect/long_scope_reticle.png");
     private static final ResourceLocation VIGNETTE = new ResourceLocation(Reference.MOD_ID, "textures/effect/scope_vignette.png");
 
     @Override
@@ -63,7 +63,7 @@ public class ModelLongScope implements IOverrideModel
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.translate(-size / 2, 0.8 * 0.0625, 0);
+                    GlStateManager.translate(-size / 2, 0.8 * 0.0625, 2.3 * 0.0625);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder buffer = tessellator.getBuffer();
                     buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

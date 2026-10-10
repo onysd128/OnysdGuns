@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class ModelMediumScope implements IOverrideModel
 {
-    private static final ResourceLocation RETICLE = new ResourceLocation(Reference.MOD_ID, "textures/blocks/sniper_reticle.png");
+    private static final ResourceLocation RETICLE = new ResourceLocation(Reference.MOD_ID, "textures/effect/holo_reticle.png");
     private static final ResourceLocation VIGNETTE = new ResourceLocation(Reference.MOD_ID, "textures/effect/scope_vignette.png");
 
     @Override
@@ -66,7 +66,7 @@ public class ModelMediumScope implements IOverrideModel
 
                 GlStateManager.pushMatrix();
                 {
-                    GlStateManager.translate(-size / 2, 0.625 * 0.0625, 0);
+                    GlStateManager.translate(-size / 2, 0.625 * 0.0625, 1.4 * 0.0625);
                     Tessellator tessellator = Tessellator.getInstance();
                     BufferBuilder buffer = tessellator.getBuffer();
                     buffer.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_TEX);
@@ -81,14 +81,19 @@ public class ModelMediumScope implements IOverrideModel
                     tessellator.draw();
 
                     GlStateManager.color(1.0F, 1.0F, 1.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
-                    GlStateManager.translate(0, 0, 0.0001);
-                    mc.getTextureManager().bindTexture(RETICLE);
-                    buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-                    buffer.pos(0, 0, 0).tex(0.984375, 0.984375).endVertex();
-                    buffer.pos(size, 0, 0).tex(0, 0.984375).endVertex();
-                    buffer.pos(size, size, 0).tex(0, 0).endVertex();
-                    buffer.pos(0, size, 0).tex(0.984375, 0).endVertex();
-                    tessellator.draw();
+                    GlStateManager.pushMatrix();
+                    {
+                        double ringSize = size * 0.5;
+                        GlStateManager.translate((size - ringSize) / 2, (size - ringSize) / 2, 0.0001);
+                        mc.getTextureManager().bindTexture(RETICLE);
+                        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+                        buffer.pos(0, 0, 0).tex(0.6875, 0.6875).endVertex();
+                        buffer.pos(ringSize, 0, 0).tex(0, 0.6875).endVertex();
+                        buffer.pos(ringSize, ringSize, 0).tex(0, 0).endVertex();
+                        buffer.pos(0, ringSize, 0).tex(0.6875, 0).endVertex();
+                        tessellator.draw();
+                    }
+                    GlStateManager.popMatrix();
 
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     GlStateManager.translate(0, 0, 0.0001);
