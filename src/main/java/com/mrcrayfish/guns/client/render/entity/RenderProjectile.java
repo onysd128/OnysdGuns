@@ -1,6 +1,7 @@
 package com.mrcrayfish.guns.client.render.entity;
 
 import com.mrcrayfish.guns.entity.EntityProjectile;
+import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -43,10 +44,20 @@ public class RenderProjectile extends Render<EntityProjectile>
             GlStateManager.translate(x, y, z);
             GlStateManager.rotate(180F, 0, 1, 0);
             GlStateManager.rotate(entityYaw, 0, 1, 0);
-            GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
-            float distancePercent = (entity.ticksExisted + partialTicks) / (entity.getProjectile().life / 2);
-            double translate = -0.25 - (0.25 * distancePercent);
-            GlStateManager.translate(translate, -0.1, -0.5);
+            if(entity.getItem().getItem() == ModGuns.MISSILE)
+            {
+                /* The ported 1.19 missile model has the nose pointing up (+Y). Rotate it
+                   -90 degrees so it lays along the projectile's trajectory. */
+                GlStateManager.rotate(entity.rotationPitch - 90F, 1, 0, 0);
+                GlStateManager.translate(-0.5F, -0.40625F, -0.5F);
+            }
+            else
+            {
+                GlStateManager.rotate(entity.rotationPitch, 1, 0, 0);
+                float distancePercent = (entity.ticksExisted + partialTicks) / (entity.getProjectile().life / 2);
+                double translate = -0.25 - (0.25 * distancePercent);
+                GlStateManager.translate(translate, -0.1, -0.5);
+            }
 
             this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
