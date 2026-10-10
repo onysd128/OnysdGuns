@@ -113,5 +113,9 @@ public class TabGun extends CreativeTabs
 		{
 			ModGuns.MACHINE_PISTOL.getSubItems(this, items);
 		}
+		if(ModGuns.HEAVY_RIFLE != null)
+		{
+			ModGuns.HEAVY_RIFLE.getSubItems(this, items);
+		}
 	}
 }
