@@ -83,15 +83,31 @@ public class ModelMediumScope implements IOverrideModel
                     GlStateManager.color(1.0F, 1.0F, 1.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
                     GlStateManager.pushMatrix();
                     {
-                        double ringSize = size * 0.25;
-                        GlStateManager.translate((size - ringSize) / 2, (size - ringSize) / 2, 0.0001);
+                        double ringSize = size * 0.15;
+                        double dotSize = ringSize * 0.5;
                         mc.getTextureManager().bindTexture(RETICLE);
-                        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-                        buffer.pos(0, 0, 0).tex(0.6875, 0.6875).endVertex();
-                        buffer.pos(ringSize, 0, 0).tex(0, 0.6875).endVertex();
-                        buffer.pos(ringSize, ringSize, 0).tex(0, 0).endVertex();
-                        buffer.pos(0, ringSize, 0).tex(0.6875, 0).endVertex();
-                        tessellator.draw();
+                        GlStateManager.pushMatrix();
+                        {
+                            GlStateManager.translate((size - ringSize) / 2, (size - ringSize) / 2, 0.0001);
+                            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+                            buffer.pos(0, 0, 0).tex(0.6875, 0.6875).endVertex();
+                            buffer.pos(ringSize, 0, 0).tex(0, 0.6875).endVertex();
+                            buffer.pos(ringSize, ringSize, 0).tex(0, 0).endVertex();
+                            buffer.pos(0, ringSize, 0).tex(0.6875, 0).endVertex();
+                            tessellator.draw();
+                        }
+                        GlStateManager.popMatrix();
+                        GlStateManager.pushMatrix();
+                        {
+                            GlStateManager.translate((size - dotSize) / 2, (size - dotSize) / 2, 0.0002);
+                            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+                            buffer.pos(0, 0, 0).tex(0.0625, 0.75).endVertex();
+                            buffer.pos(dotSize, 0, 0).tex(0, 0.75).endVertex();
+                            buffer.pos(dotSize, dotSize, 0).tex(0, 0.6875).endVertex();
+                            buffer.pos(0, dotSize, 0).tex(0.0625, 0.6875).endVertex();
+                            tessellator.draw();
+                        }
+                        GlStateManager.popMatrix();
                     }
                     GlStateManager.popMatrix();
 
