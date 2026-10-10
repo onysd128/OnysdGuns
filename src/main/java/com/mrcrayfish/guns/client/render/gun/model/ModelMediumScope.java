@@ -60,7 +60,10 @@ public class ModelMediumScope implements IOverrideModel
                 double cut = 0.2485;
                 double offset = cut / 16.0;
                 double cornerRatio = cut / scopeSize;
-                double crop = 0.4;
+                /* The viewfinder quad was reduced from the original 2.0 aperture to the ported
+                 * 1.19 tube (1.2485), so shrink the sampled frame by the same ratio. Otherwise
+                 * the smaller window shows a larger area of the screen and minifies the target. */
+                double crop = (1.0 - 0.2 * (scopeSize / 2.0)) / 2.0;
                 Minecraft mc = Minecraft.getMinecraft();
                 int kickAmount = ClientProxy.renderEvents.recoilAngle > 0 ? 50 : 0;
                 double texOffset = ClientProxy.renderEvents.recoilNormal * kickAmount * (1.0 / mc.displayHeight);

@@ -55,7 +55,9 @@ public class ModelLongScope implements IOverrideModel
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
                 double size = 1.1 / 16.0;
-                double crop = 0.425;
+                /* The viewfinder quad was reduced from the original 1.2 aperture to 1.1, so
+                 * shrink the sampled frame by the same ratio to keep the original magnification. */
+                double crop = (1.0 - 0.15 * (1.1 / 1.2)) / 2.0;
                 Minecraft mc = Minecraft.getMinecraft();
                 int kickAmount = ClientProxy.renderEvents.recoilAngle > 0 ? 50 : 0;
                 double offset = ClientProxy.renderEvents.recoilNormal * kickAmount * (1.0 / mc.displayHeight);
