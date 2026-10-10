@@ -62,6 +62,30 @@ public class RenderEvents
     private static final ResourceLocation WHITE_GRADIENT = new ResourceLocation(Reference.MOD_ID, "textures/effect/white_gradient.png");
     private static final Map<UUID, CooldownTracker> COOLDOWN_TRACKER_MAP = new HashMap<>();
     private static final double ZOOM_TICKS = 4;
+
+    /**
+     * The original "fixed" display transform used by the holster before each gun got an
+     * item frame specific "fixed" transform ("updated models display in frame"). Every
+     * gun shared the same values {@code rotation [0, 90, 0]}, {@code translation [X, 10, 0]}
+     * and {@code scale [2, 2, 2]} except for the X translation, which differs per gun
+     * because each model's geometry is centred differently. The holster now renders with
+     * {@link ItemCameraTransforms.TransformType#NONE} and applies this legacy transform
+     * manually, so weapons on the back/hip keep their original size and orientation while
+     * item frames keep their new look. Values are in 1/16 block units.
+     */
+    private static final Map<String, Float> HOLSTER_X_OFFSET = new HashMap<>();
+
+    static
+    {
+        HOLSTER_X_OFFSET.put("assault_rifle", -7.0F);
+        HOLSTER_X_OFFSET.put("rifle", -0.5F);
+        HOLSTER_X_OFFSET.put("shotgun", -0.5F);
+        HOLSTER_X_OFFSET.put("bazooka", -0.5F);
+        HOLSTER_X_OFFSET.put("grenade_launcher", -7.0F);
+        HOLSTER_X_OFFSET.put("chain_gun", -0.5F);
+        HOLSTER_X_OFFSET.put("handgun", -9.5F);
+        HOLSTER_X_OFFSET.put("machine_pistol", -7.0F);
+    }
     public static boolean drawFlash = false;
     public static int screenTextureId = -1;
     public static boolean shadersEnabled;
@@ -572,7 +596,11 @@ public class RenderEvents
                 }
                 GlStateManager.rotate(-45F, 0, 0, 1);
                 GlStateManager.scale(0.5, 0.5, 0.5);
-                this.renderWeapon(player, heldItem, ItemCameraTransforms.TransformType.FIXED, event.getPartialTicks());
+                /* The model's "fixed" transform is now used for item frames and no longer
+                 * matches the holster, so apply the original holster transform here and
+                 * render without reading the JSON transform to restore the weapon size. */
+                applyHolsterTransform(gun.id);
+                this.renderWeapon(player, heldItem, ItemCameraTransforms.TransformType.NONE, event.getPartialTicks());
                 GlStateManager.popMatrix();
             }
             else
@@ -592,7 +620,8 @@ public class RenderEvents
                 GlStateManager.rotate(75F, 0, 0, 1);
                 GlStateManager.rotate((float) Math.toDegrees(event.getModelPlayer().bipedRightLeg.rotateAngleX) / 10F, 0, 0, 1);
                 GlStateManager.scale(0.5, 0.5, 0.5);
-                this.renderWeapon(player, heldItem, ItemCameraTransforms.TransformType.FIXED, event.getPartialTicks());
+                applyHolsterTransform(gun.id);
+                this.renderWeapon(player, heldItem, ItemCameraTransforms.TransformType.NONE, event.getPartialTicks());
                 GlStateManager.popMatrix();
             }
         }
@@ -612,6 +641,22 @@ public class RenderEvents
         event.setCanceled(this.renderWeapon(mc.player, event.getItem(), event.getTransformType(), event.getPartialTicks()));
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+    }
+
+    /**
+     * Applies the legacy holster transform that used to come from the item model's
+     * "fixed" display transform. See {@link RenderEvents#HOLSTER_X_OFFSET}.
+     */
+    private static void applyHolsterTransform(String gunId)
+    {
+        float x = -7.0F;
+        if(gunId != null && HOLSTER_X_OFFSET.containsKey(gunId))
+        {
+            x = HOLSTER_X_OFFSET.get(gunId);
+        }
+        GlStateManager.translate(x * 0.0625F, 10 * 0.0625F, 0F);
+        GlStateManager.rotate(90F, 0, 1, 0);
+        GlStateManager.scale(2F, 2F, 2F);
     }
 
     private boolean renderWeapon(EntityLivingBase entity, ItemStack stack, ItemCameraTransforms.TransformType transformType, float partialTicks)
