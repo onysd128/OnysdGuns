@@ -97,6 +97,11 @@ public class ClientProxy extends CommonProxy
 			{
 				return stack.getTagCompound().getInteger("color");
 			}
+			if(index == 2)
+			{
+				/* Reticle colour. Matches 1.19, where tintindex 2 defaults to red. */
+				return 0xFFFF0000;
+			}
 			return -1;
 		};
 		RegistrationHandler.Items.getItems().forEach(item ->
