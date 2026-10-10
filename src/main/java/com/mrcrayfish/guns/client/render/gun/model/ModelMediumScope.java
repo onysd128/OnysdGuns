@@ -83,7 +83,7 @@ public class ModelMediumScope implements IOverrideModel
                     GlStateManager.color(1.0F, 1.0F, 1.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
                     GlStateManager.pushMatrix();
                     {
-                        double ringSize = size * 0.015;
+                        double ringSize = size * 0.045;
                         double dotSize = ringSize * 0.5;
                         mc.getTextureManager().bindTexture(RETICLE);
                         GlStateManager.pushMatrix();
