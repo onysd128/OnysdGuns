@@ -9,6 +9,7 @@ import com.mrcrayfish.guns.client.event.GunHandler;
 import com.mrcrayfish.guns.client.event.ReloadHandler;
 import com.mrcrayfish.guns.client.event.RenderEvents;
 import com.mrcrayfish.guns.client.event.SoundEvents;
+import com.mrcrayfish.guns.client.handler.RecoilHandler;
 import com.mrcrayfish.guns.client.gui.DisplayProperty;
 import com.mrcrayfish.guns.client.gui.GuiWorkbench;
 import com.mrcrayfish.guns.client.render.entity.RenderGrenade;
@@ -70,6 +71,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(renderEvents = new RenderEvents());
 		MinecraftForge.EVENT_BUS.register(new GunHandler());
 		MinecraftForge.EVENT_BUS.register(new ReloadHandler());
+		MinecraftForge.EVENT_BUS.register(RecoilHandler.get());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectile.class, RenderProjectile::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityThrowableGrenade.class, RenderGrenade::new);

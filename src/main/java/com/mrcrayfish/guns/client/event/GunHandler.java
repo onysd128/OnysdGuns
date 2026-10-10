@@ -3,6 +3,7 @@ package com.mrcrayfish.guns.client.event;
 import com.mrcrayfish.guns.GunConfig;
 import com.mrcrayfish.guns.MrCrayfishGunMod;
 import com.mrcrayfish.guns.client.AimTracker;
+import com.mrcrayfish.guns.client.handler.RecoilHandler;
 import com.mrcrayfish.guns.event.CommonEvents;
 import com.mrcrayfish.guns.item.ItemGun;
 import com.mrcrayfish.guns.network.PacketHandler;
@@ -125,6 +126,8 @@ public class GunHandler
             Gun modifiedGun = itemGun.getModifiedGun(heldItem);
             tracker.setCooldown(heldItem.getItem(), modifiedGun.general.rate);
             RenderEvents.getCooldownTracker(player.getUniqueID()).setCooldown(heldItem.getItem(), modifiedGun.general.rate);
+            RecoilHandler.get().onGunFire(modifiedGun);
+            RenderEvents.onGunFired();
             PacketHandler.INSTANCE.sendToServer(new MessageShoot());
         }
     }

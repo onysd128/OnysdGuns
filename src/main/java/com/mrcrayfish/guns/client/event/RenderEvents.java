@@ -4,8 +4,11 @@ import com.mrcrayfish.guns.GunConfig;
 import com.mrcrayfish.guns.ItemStackUtil;
 import com.mrcrayfish.guns.MrCrayfishGunMod;
 import com.mrcrayfish.guns.Reference;
+import com.mrcrayfish.guns.client.SwayType;
+import com.mrcrayfish.guns.client.handler.RecoilHandler;
 import com.mrcrayfish.guns.client.render.gun.IOverrideModel;
 import com.mrcrayfish.guns.client.render.gun.ModelOverrides;
+import com.mrcrayfish.guns.client.util.Easings;
 import com.mrcrayfish.guns.client.util.RenderUtil;
 import com.mrcrayfish.guns.event.CommonEvents;
 import com.mrcrayfish.guns.init.ModGuns;
@@ -18,6 +21,7 @@ import com.mrcrayfish.obfuscate.client.event.ModelPlayerEvent;
 import com.mrcrayfish.obfuscate.client.event.RenderItemEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -90,11 +94,64 @@ public class RenderEvents
     public static int screenTextureId = -1;
     public static boolean shadersEnabled;
 
+    /* Single instance access used by static callbacks (e.g. the shot-fired hook) */
+    public static RenderEvents INSTANCE;
+
+    public RenderEvents()
+    {
+        INSTANCE = this;
+    }
+
+    /**
+     * Called by the client when a shot is fired. Resets the sprint animation
+     * transition and starts the sprint cooldown, exactly like the 1.19 onGunFire.
+     */
+    public static void onGunFired()
+    {
+        if(INSTANCE != null)
+        {
+            INSTANCE.sprintTransition = 0;
+            INSTANCE.sprintCooldown = 20; /* TODO make a config option */
+        }
+    }
+
+    /**
+     * @return the current normalised ads zoom progress (0.0 - 1.0)
+     */
+    public static double getNormalZoomProgress()
+    {
+        return INSTANCE != null ? INSTANCE.normalZoomProgress : 0.0;
+    }
+
     private int zoomProgress;
     private int lastZoomProgress;
     public double normalZoomProgress;
     public double recoilNormal;
     public double recoilAngle;
+
+    /* -- Ported 1.19 movement animation state -- */
+
+    /* Sprinting animation transition (0 - 5) and shot cooldown */
+    private int sprintTransition;
+    private int prevSprintTransition;
+    private int sprintCooldown;
+    private float sprintIntensity = 1.0F;
+
+    /* Immersive camera roll and fall sway state */
+    private float immersiveRoll;
+    private float prevImmersiveRoll;
+    private float fallSway;
+    private float prevFallSway;
+
+    /* Smoothed walk speed used as the bobbing amplitude */
+    private float bob;
+    private float prevBob;
+
+    /* Smoothed head rotation used as the sway lag reference */
+    private float bobPitch;
+    private float prevBobPitch;
+    private float bobYaw;
+    private float prevBobYaw;
 
     public boolean playAnimation;
     private int startTick;
@@ -250,6 +307,20 @@ public class RenderEvents
                     reloadTimer -= 1;
                 }
             }
+
+            /* Updates the sprinting and immersive camera animations */
+            this.updateSprinting();
+            this.updateImmersiveCamera();
+
+            /* Smooths the head rotation and walk speed for the sway and bobbing animations */
+            this.prevBobPitch = this.bobPitch;
+            this.bobPitch += MathHelper.wrapDegrees(player.rotationPitch - this.bobPitch) * 0.5F;
+            this.prevBobYaw = this.bobYaw;
+            this.bobYaw += MathHelper.wrapDegrees(player.rotationYawHead - this.bobYaw) * 0.5F;
+
+            this.prevBob = this.bob;
+            float horizontalSpeed = MathHelper.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ);
+            this.bob += (Math.min(horizontalSpeed, 0.5F) - this.bob) * 0.5F;
         }
     }
 
@@ -328,13 +399,19 @@ public class RenderEvents
                     zOffset -= gun.modules.zoom.zOffset * 0.0625 * scaleZ - translateZ;
                 }
                 double renderOffset = right ? -0.3415 : -0.3775;
-                GlStateManager.translate((renderOffset + xOffset) * normalZoomProgress * (right ? 1F : -1F), yOffset * normalZoomProgress, zOffset * normalZoomProgress);
+                /* Eases the zoom movement using the 1.19 default sight curve */
+                double time = Easings.EASE_OUT_QUAD.apply(this.normalZoomProgress);
+                GlStateManager.translate((renderOffset + xOffset) * time * (right ? 1F : -1F), yOffset * time, zOffset * time);
             }
             else
             {
                 GlStateManager.translate(0, -1 * normalZoomProgress, 0);
             }
         }
+
+        /* Applies custom bobbing animations to the weapon (reverses the camera bob first) */
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        this.applyBobbingTransforms(player, event.getPartialTicks());
 
         GlStateManager.translate(0, -event.getEquipProgress(), 0);
 
@@ -347,8 +424,20 @@ public class RenderEvents
         /* Translate the item position based on the hand side */
         GlStateManager.translate(0.5602F - (right ? 0.0F : 0.72F), -0.55625F, -0.72F);
 
-        /* Applies recoil and reload rotations */
-        this.applyRecoil(heldItem.getItem(), ((ItemGun) heldItem.getItem()).getGun());
+        /* Pivot values match the model's own first person translation so the weapon
+         * tilts around its own centre during aiming and swaying */
+        float pivotX = model.getItemCameraTransforms().firstperson_right.translation.getX() * 0.0625F * scaleX;
+        float pivotY = model.getItemCameraTransforms().firstperson_right.translation.getY() * 0.0625F * scaleY;
+        float pivotZ = model.getItemCameraTransforms().firstperson_right.translation.getZ() * 0.0625F * scaleZ;
+
+        Gun gun = ((ItemGun) heldItem.getItem()).getModifiedGun(heldItem);
+        int offset = right ? 1 : -1;
+
+        /* Applies all the 1.19 movement animations: aiming, swaying, sprinting, recoil and reload */
+        this.applyAimingTransforms(pivotX, pivotY, pivotZ, offset);
+        this.applySwayTransforms(gun, player, pivotX, pivotY, pivotZ, event.getPartialTicks());
+        this.applySprintingTransforms(gun, right, event.getPartialTicks());
+        this.applyRecoilTransforms(heldItem, gun);
         this.applyReload(event.getPartialTicks());
 
         /* Render offhand arm so it is holding the weapon. Only applies if it's a two handed weapon */
@@ -371,29 +460,213 @@ public class RenderEvents
         GlStateManager.rotate(45F * reloadProgress, 1, 0, 0);
     }
 
-    private void applyRecoil(Item item, Gun gun)
+    private void applyRecoilTransforms(ItemStack item, Gun gun)
     {
-        CooldownTracker tracker = getCooldownTracker(Minecraft.getMinecraft().player.getUniqueID());
-        float cooldown = tracker.getCooldown(item, Minecraft.getMinecraft().getRenderPartialTicks());
-        cooldown = cooldown >= gun.general.recoilDurationOffset  ? (cooldown - gun.general.recoilDurationOffset) / (1.0F - gun.general.recoilDurationOffset) : 0.0F;
+        double recoilNormal = RecoilHandler.get().getGunRecoilNormal();
 
-        if(cooldown >= 0.8)
+        /* Keeps the fields used by the scope models (ModelLongScope/ModelMediumScope) updated */
+        this.recoilNormal = recoilNormal;
+        this.recoilAngle = RecoilHandler.get().getGunRecoilAngle();
+
+        if(gun.canAttachType(IAttachment.Type.SCOPE) && !Gun.getScope(item).isEmpty())
         {
-            float amount = 1.0F * ((1.0F - cooldown) / 0.2F);
-            recoilNormal = 1 - (--amount) * amount * amount * amount;
-        }
-        else
-        {
-            float amount = (cooldown / 0.8F);
-            recoilNormal = amount < 0.5 ? 2 * amount * amount : -1 + (4 - 2 * amount) * amount;
+            recoilNormal -= recoilNormal * (0.5 * this.normalZoomProgress);
         }
 
-        recoilAngle = gun.general.recoilAngle;
+        float kickReduction = 1.0F; /* 1.12.2 has no GunModifierHelper */
+        float recoilReduction = 1.0F;
+        double kick = gun.general.recoilKick * 0.0625 * recoilNormal * RecoilHandler.get().getAdsRecoilReduction(gun);
+        float recoilLift = (float) (gun.general.recoilAngle * recoilNormal) * (float) RecoilHandler.get().getAdsRecoilReduction(gun);
+        float recoilSwayAmount = (float) (2F + 1F * (1.0 - this.normalZoomProgress));
+        float recoilSway = (float) ((RecoilHandler.get().getGunRecoilRandom() * recoilSwayAmount - recoilSwayAmount / 2F) * recoilNormal);
 
-        GlStateManager.translate(0, 0, gun.general.recoilKick * 0.0625 * recoilNormal);
-        GlStateManager.translate(0, 0, 0.35);
-        GlStateManager.rotate((float) (gun.general.recoilAngle * recoilNormal), 1, 0, 0);
-        GlStateManager.translate(0, 0, -0.35);
+        GlStateManager.translate(0, 0, kick * kickReduction);
+        GlStateManager.translate(0, 0, 0.15);
+        GlStateManager.rotate(recoilSway * recoilReduction, 0, 1, 0);
+        GlStateManager.rotate(recoilSway * recoilReduction, 0, 0, 1);
+        GlStateManager.rotate(recoilLift * recoilReduction, 1, 0, 0);
+        GlStateManager.translate(0, 0, -0.15);
+    }
+
+    /**
+     * Reverses the vanilla camera bob and applies the 1.19 weapon bobbing instead.
+     */
+    private void applyBobbingTransforms(EntityPlayer player, float partialTicks)
+    {
+        if(Minecraft.getMinecraft().gameSettings.viewBobbing && player != null)
+        {
+            /* Computes the same values as the vanilla camera bob so it can be undone */
+            float deltaDistanceWalked = player.distanceWalkedModified - player.prevDistanceWalkedModified;
+            float distanceWalked = -(player.distanceWalkedModified + deltaDistanceWalked * partialTicks);
+            float cameraYaw = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
+            float cameraPitch = player.prevCameraPitch + (player.cameraPitch - player.prevCameraPitch) * partialTicks;
+
+            /* Reverses the vanilla camera bob applied by EntityRenderer so it can be controlled */
+            GlStateManager.rotate(-cameraYaw, 0, 1, 0);
+            GlStateManager.translate(-distanceWalked * cameraYaw * 0.25F, cameraPitch * MathHelper.abs(cameraYaw) * 0.25F, 0);
+
+            /* The new controlled bobbing */
+            float bobbing = MathHelper.lerp(partialTicks, this.prevBob, this.bob);
+            bobbing *= player.isSprinting() ? 8.0F : 4.0F;
+            bobbing *= (float) GunConfig.CLIENT.display.bobbingIntensity;
+
+            double invertZoomProgress = 1.0 - this.normalZoomProgress * this.sprintIntensity;
+            GlStateManager.rotate((float) (Math.sin(distanceWalked * Math.PI) * bobbing * 3.0F) * (float) invertZoomProgress, 0, 0, 1);
+            GlStateManager.rotate((float) (Math.abs(Math.cos(distanceWalked * Math.PI - 0.2F) * bobbing) * 5.0F) * (float) invertZoomProgress, 1, 0, 0);
+        }
+    }
+
+    /**
+     * Applies the tilting animation while aiming down sights. Identity when not aiming.
+     */
+    private void applyAimingTransforms(float x, float y, float z, int offset)
+    {
+        GlStateManager.translate(x * offset, y, z);
+        GlStateManager.translate(0, -0.25, 0.25);
+        float aiming = (float) Math.sin(Math.toRadians(this.normalZoomProgress * 180.0));
+        aiming = Easings.EASE_IN_QUAD.apply(aiming);
+        GlStateManager.rotate(aiming * 10F * offset, 0, 0, 1);
+        GlStateManager.rotate(aiming * 5F, 1, 0, 0);
+        GlStateManager.rotate(aiming * 5F * offset, 0, 1, 0);
+        GlStateManager.translate(0, 0.25, -0.25);
+        GlStateManager.translate(-x * offset, -y, -z);
+    }
+
+    /**
+     * Applies the weapon sway based on head movement and fall sway. Identity when idle.
+     */
+    private void applySwayTransforms(Gun gun, EntityPlayer player, float x, float y, float z, float partialTicks)
+    {
+        if(!GunConfig.CLIENT.display.weaponSway || player == null)
+            return;
+
+        GlStateManager.translate(x, y, z);
+
+        double zOffset = gun.general.gripType == GripType.ONE_HANDED ? 0.5 : 0.35;
+        GlStateManager.translate(0, -0.25, zOffset);
+        GlStateManager.rotate(MathHelper.lerp(partialTicks, this.prevFallSway, this.fallSway), 1, 0, 0);
+        GlStateManager.translate(0, 0.25, -zOffset);
+
+        float bobPitch = rotLerp(partialTicks, this.prevBobPitch, this.bobPitch);
+        float headPitch = rotLerp(partialTicks, player.prevRotationPitch, player.rotationPitch);
+        float swayPitch = headPitch - bobPitch;
+        swayPitch *= (float) (1.0 - 0.5 * this.normalZoomProgress);
+        GlStateManager.rotate(swayPitch * (float) GunConfig.CLIENT.display.swaySensitivity * GunConfig.CLIENT.display.getSwayType().getPitchDirection(), 1, 0, 0);
+
+        float bobYaw = rotLerp(partialTicks, this.prevBobYaw, this.bobYaw);
+        float headYaw = rotLerp(partialTicks, player.prevRotationYawHead, player.rotationYawHead);
+        float swayYaw = headYaw - bobYaw;
+        swayYaw *= (float) (1.0 - 0.5 * this.normalZoomProgress);
+        GlStateManager.rotate(swayYaw * (float) GunConfig.CLIENT.display.swaySensitivity * GunConfig.CLIENT.display.getSwayType().getYawDirection(), 0, 1, 0);
+
+        GlStateManager.translate(-x, -y, -z);
+    }
+
+    /**
+     * Applies the sprinting animation. Only two handed weapons tilt while sprinting in 1.19.
+     */
+    private void applySprintingTransforms(Gun gun, boolean right, float partialTicks)
+    {
+        if(GunConfig.CLIENT.display.sprintAnimation && gun.general.gripType == GripType.TWO_HANDED)
+        {
+            float leftHanded = right ? 1 : -1;
+            float transition = (this.prevSprintTransition + (this.sprintTransition - this.prevSprintTransition) * partialTicks) / 5F;
+            transition = (float) Math.sin((transition * Math.PI) / 2);
+            GlStateManager.translate(-0.25F * leftHanded * transition, -0.1F * transition, 0);
+            GlStateManager.rotate(45F * leftHanded * transition, 0, 1, 0);
+            GlStateManager.rotate(-25F * transition, 1, 0, 0);
+        }
+    }
+
+    /**
+     * Updates the sprinting animation transition. Ported from 1.19: sprinting only
+     * while actually sprinting, not shooting, not reloading, not aiming and while
+     * the sprint cooldown after a shot has expired.
+     */
+    private void updateSprinting()
+    {
+        this.prevSprintTransition = this.sprintTransition;
+        Minecraft mc = Minecraft.getMinecraft();
+        if(mc.player != null && mc.player.isSprinting() && !this.isHoldingShooting(mc.player) && !mc.player.getDataManager().get(CommonEvents.RELOADING) && !this.isZooming(mc.player) && this.sprintCooldown == 0)
+        {
+            if(this.sprintTransition < 5)
+                this.sprintTransition++;
+        }
+        else if(this.sprintTransition > 0)
+        {
+            this.sprintTransition--;
+        }
+        if(this.sprintCooldown > 0)
+            this.sprintCooldown--;
+    }
+
+    /**
+     * 1.12.2 has no SHOOTING data key, so the mod's own cooldown tracker is used as
+     * a proxy to determine if the player is actively shooting.
+     */
+    private boolean isHoldingShooting(EntityPlayer player)
+    {
+        ItemStack heldItem = player.getHeldItemMainhand();
+        if(heldItem.isEmpty() || !(heldItem.getItem() instanceof ItemGun))
+            return false;
+        return getCooldownTracker(player.getUniqueID()).hasCooldown(heldItem.getItem());
+    }
+
+    /**
+     * Updates the immersive camera roll and fall sway. Ported from 1.19.
+     */
+    private void updateImmersiveCamera()
+    {
+        this.prevImmersiveRoll = this.immersiveRoll;
+        this.prevFallSway = this.fallSway;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        if(mc.player == null)
+            return;
+
+        EntityPlayer player = mc.player;
+        float strafe = player instanceof EntityPlayerSP ? ((EntityPlayerSP) player).movementInput.moveStrafe : 0F;
+        float targetAngle = player.getHeldItemMainhand().getItem() instanceof ItemGun || !GunConfig.CLIENT.display.restrictCameraRollToWeapons ? strafe : 0F;
+        float speed = strafe != 0 ? 0.1F : 0.15F;
+        this.immersiveRoll = MathHelper.lerp(speed, this.immersiveRoll, targetAngle);
+
+        float deltaY = MathHelper.clamp((float) (player.lastTickPosY - player.posY), -1.0F, 1.0F);
+        deltaY *= (float) (1.0 - this.normalZoomProgress);
+        deltaY *= (float) (1.0 - (Math.abs(player.rotationPitch) / 90.0F));
+        this.fallSway = approach(this.fallSway, deltaY * 60F * (float) GunConfig.CLIENT.display.swaySensitivity, 10.0F);
+
+        float intensity = player.isSprinting() ? 0.75F : 1.0F;
+        this.sprintIntensity = approach(this.sprintIntensity, intensity, 0.1F);
+    }
+
+    /**
+     * Applies the camera roll effect when moving side to side. Ported from 1.19,
+     * which uses the camera setup event to apply the roll.
+     */
+    @SubscribeEvent
+    public void onCameraSetup(EntityViewRenderEvent.CameraSetup event)
+    {
+        if(GunConfig.CLIENT.display.cameraRollEffect)
+        {
+            float roll = MathHelper.lerp((float) event.getRenderPartialTicks(), this.prevImmersiveRoll, this.immersiveRoll);
+            roll = (float) Math.sin((roll * Math.PI) / 2.0);
+            roll *= (float) GunConfig.CLIENT.display.cameraRollAngle;
+            event.setRoll(-roll);
+        }
+    }
+
+    private static float rotLerp(float delta, float start, float end)
+    {
+        return start + delta * MathHelper.wrapDegrees(end - start);
+    }
+
+    private static float approach(float current, float target, float maxIncrease)
+    {
+        if(current < target)
+            return Math.min(current + maxIncrease, target);
+        if(current > target)
+            return Math.max(current - maxIncrease, target);
+        return target;
     }
 
     private boolean isZooming(EntityPlayer player)
@@ -819,7 +1092,8 @@ public class RenderEvents
             GlStateManager.rotate(180F, 0, 1, 0);
 
             float reloadProgress = (prevReloadTimer + (reloadTimer - prevReloadTimer) * partialTicks) / 5F;
-            GlStateManager.translate(0, -reloadProgress * 2, 0);
+            /* Ported from 1.19 TwoHandedPose: the front arm moves down, back and side while reloading */
+            GlStateManager.translate(reloadProgress * 0.5F, -reloadProgress, -reloadProgress * 0.5F);
 
             int side = hand.opposite() == EnumHandSide.RIGHT ? 1 : -1;
             GlStateManager.translate(6.5 * side * 0.0625, -0.55, -0.5625);

@@ -36,6 +36,7 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 		@Optional public float recoilAngle;
 		@Optional public float recoilKick;
 		@Optional public float recoilDurationOffset;
+		@Optional public float recoilAdsReduction = 0.2F;
 		@Optional public int projectileAmount = 1;
 		@Optional public boolean alwaysSpread;
 		@Optional public float spread;
@@ -66,6 +67,7 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 			tag.setFloat("recoilAngle", recoilAngle);
 			tag.setFloat("recoilKick", recoilKick);
 			tag.setFloat("recoilDurationOffset", recoilDurationOffset);
+			tag.setFloat("recoilAdsReduction", recoilAdsReduction);
 			tag.setInteger("projectileAmount", projectileAmount);
 			tag.setBoolean("alwaysSpread", alwaysSpread);
 			tag.setFloat("spread", spread);
@@ -107,6 +109,10 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 			{
 				this.recoilDurationOffset = tag.getFloat("recoilDurationOffset");
 			}
+			if(tag.hasKey("recoilAdsReduction", Constants.NBT.TAG_FLOAT))
+			{
+				this.recoilAdsReduction = tag.getFloat("recoilAdsReduction");
+			}
 			if(tag.hasKey("projectileAmount", Constants.NBT.TAG_INT))
 			{
 				this.projectileAmount = tag.getInteger("projectileAmount");
@@ -132,6 +138,7 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 			general.recoilAngle = recoilAngle;
 			general.recoilKick = recoilKick;
 			general.recoilDurationOffset = recoilDurationOffset;
+			general.recoilAdsReduction = recoilAdsReduction;
 			general.projectileAmount = projectileAmount;
 			general.alwaysSpread = alwaysSpread;
 			general.spread = spread;

@@ -2,6 +2,7 @@ package com.mrcrayfish.guns;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import com.mrcrayfish.guns.client.SwayType;
 import com.mrcrayfish.guns.item.GunRegistry;
 import com.mrcrayfish.guns.item.ItemGun;
 import com.mrcrayfish.guns.object.ServerGun;
@@ -202,6 +203,62 @@ public class GunConfig
 		@Config.Comment("If true, an animation is performed while cycling items in the Workbench")
 		@Config.LangKey(PREFIX + ".workbench_animation")
 		public boolean workbenchAnimation = true;
+
+		@Config.Name("Weapon Sway")
+		@Config.Comment("If true, weapons will sway when looking around")
+		@Config.LangKey(PREFIX + ".weapon_sway")
+		public boolean weaponSway = true;
+
+		@Config.Name("Sway Sensitivity")
+		@Config.Comment("The sensitivity of the weapon sway")
+		@Config.LangKey(PREFIX + ".sway_sensitivity")
+		@Config.RangeDouble(min = 0, max = 1)
+		public double swaySensitivity = 0.3;
+
+		@Config.Name("Sway Type")
+		@Config.Comment("The type of sway animation to use. Value can be either drag or directional")
+		@Config.LangKey(PREFIX + ".sway_type")
+		public String swayType = "drag";
+
+		@Config.Name("Sprint Animation")
+		@Config.Comment("If true, weapons will tilt when sprinting")
+		@Config.LangKey(PREFIX + ".sprint_animation")
+		public boolean sprintAnimation = true;
+
+		@Config.Name("Bobbing Intensity")
+		@Config.Comment("The intensity of the weapon bobbing animation")
+		@Config.LangKey(PREFIX + ".bobbing_intensity")
+		@Config.RangeDouble(min = 0, max = 2)
+		public double bobbingIntensity = 1.0;
+
+		@Config.Name("Camera Roll Effect")
+		@Config.Comment("If true, the camera will roll when moving side to side")
+		@Config.LangKey(PREFIX + ".camera_roll_effect")
+		public boolean cameraRollEffect = true;
+
+		@Config.Name("Camera Roll Angle")
+		@Config.Comment("The angle of the camera roll when moving side to side")
+		@Config.LangKey(PREFIX + ".camera_roll_angle")
+		@Config.RangeDouble(min = 0, max = 45)
+		public double cameraRollAngle = 1.5;
+
+		@Config.Name("Restrict Camera Roll To Weapons")
+		@Config.Comment("If true, the camera roll effect will only apply when holding a weapon")
+		@Config.LangKey(PREFIX + ".restrict_camera_roll")
+		public boolean restrictCameraRollToWeapons = true;
+
+		@Config.Name("Enable Camera Recoil")
+		@Config.Comment("If true, the camera will recoil when firing a weapon")
+		@Config.LangKey(PREFIX + ".camera_recoil")
+		public boolean enableCameraRecoil = true;
+
+		/**
+		 * @return the sway type from the configured string value
+		 */
+		public SwayType getSwayType()
+		{
+			return SwayType.byName(swayType);
+		}
 	}
 
 	public static class Controls
