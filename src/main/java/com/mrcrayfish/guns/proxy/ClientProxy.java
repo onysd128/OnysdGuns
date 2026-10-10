@@ -150,6 +150,7 @@ public class ClientProxy extends CommonProxy
 	public void showMuzzleFlash()
 	{
 		RenderEvents.drawFlash = true;
+		RenderEvents.flashRandom = (float) Math.random();
 	}
 
 	@Override

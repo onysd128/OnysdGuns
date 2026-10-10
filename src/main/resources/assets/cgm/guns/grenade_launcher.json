@@ -29,7 +29,8 @@
         "flash": {
             "xOffset": 0.0,
             "yOffset": -4.5,
-            "zOffset": -3.8
+            "zOffset": -3.8,
+            "scale": 0.75
         }
     }
 }

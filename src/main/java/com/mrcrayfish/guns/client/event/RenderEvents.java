@@ -91,6 +91,7 @@ public class RenderEvents
         HOLSTER_X_OFFSET.put("machine_pistol", -7.0F);
     }
     public static boolean drawFlash = false;
+    public static float flashRandom = 0.0F;
     public static int screenTextureId = -1;
     public static boolean shadersEnabled;
 
@@ -1078,13 +1079,31 @@ public class RenderEvents
                     if(positioned != null)
                     {
                         GlStateManager.translate(0, 0, (gun.display.flash.zOffset - positioned.zOffset) * 0.0625 - positioned.scale);
-                        GlStateManager.scale(0.5, 0.5, 0);
                     }
                 }
+
+                /* Ported from the 1.19 version: every shot gets a random rotation around the
+                 * barrel axis with a chance to be flipped vertically, and the size comes from
+                 * the weapon's "display.flash.scale" (1.19 halves it). RenderUtil already
+                 * centres the model, so rotating and scaling around the origin spins the quad
+                 * about its own centre without moving it. */
+                GlStateManager.rotate(360F * flashRandom, 0, 0, 1);
+                boolean flip = flashRandom >= 0.5F;
+                if(flip)
+                {
+                    GlStateManager.rotate(180F, 1, 0, 0);
+                    GlStateManager.disableCull();
+                }
+                float flashScale = (float) gun.display.flash.scale * 0.5F;
+                GlStateManager.scale(flashScale, flashScale, 1.0F);
 
                 Minecraft.getMinecraft().entityRenderer.disableLightmap();
                 RenderUtil.renderModel(flashModel, weapon);
                 Minecraft.getMinecraft().entityRenderer.enableLightmap();
+                if(flip)
+                {
+                    GlStateManager.enableCull();
+                }
                 GlStateManager.enableLighting();
             }
             GlStateManager.popMatrix();
