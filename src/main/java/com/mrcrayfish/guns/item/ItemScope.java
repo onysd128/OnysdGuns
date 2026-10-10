@@ -54,9 +54,9 @@ public class ItemScope extends ItemAttachment implements ISubItems
 
     public enum Type
     {
-        SMALL("small", 0.1F, 1.0F),
-        MEDIUM("medium", 0.2F, 2.1F),
-        LONG("long", 0.35F, 1.59F);
+        SMALL("small", 0.1F, 1.2F),
+        MEDIUM("medium", 0.2F, 1.4F),
+        LONG("long", 0.35F, 1.4F);
 
         private String name;
         private float additionalZoom;

@@ -25,8 +25,10 @@
     },
     "display": {
         "flash": {
-            "yOffset": -6,
-            "zOffset": -15
+            "xOffset": 0.0,
+            "yOffset": -5.3,
+            "zOffset": -11.51,
+            "scale": 0.5
         }
     }
 }
