@@ -506,7 +506,7 @@ public class RenderEvents
             GlStateManager.translate(-distanceWalked * cameraYaw * 0.25F, cameraPitch * MathHelper.abs(cameraYaw) * 0.25F, 0);
 
             /* The new controlled bobbing */
-            float bobbing = MathHelper.lerp(partialTicks, this.prevBob, this.bob);
+            float bobbing = lerp(partialTicks, this.prevBob, this.bob);
             bobbing *= player.isSprinting() ? 8.0F : 4.0F;
             bobbing *= (float) GunConfig.CLIENT.display.bobbingIntensity;
 
@@ -544,7 +544,7 @@ public class RenderEvents
 
         double zOffset = gun.general.gripType == GripType.ONE_HANDED ? 0.5 : 0.35;
         GlStateManager.translate(0, -0.25, zOffset);
-        GlStateManager.rotate(MathHelper.lerp(partialTicks, this.prevFallSway, this.fallSway), 1, 0, 0);
+        GlStateManager.rotate(lerp(partialTicks, this.prevFallSway, this.fallSway), 1, 0, 0);
         GlStateManager.translate(0, 0.25, -zOffset);
 
         float bobPitch = rotLerp(partialTicks, this.prevBobPitch, this.bobPitch);
@@ -628,7 +628,7 @@ public class RenderEvents
         float strafe = player instanceof EntityPlayerSP ? ((EntityPlayerSP) player).movementInput.moveStrafe : 0F;
         float targetAngle = player.getHeldItemMainhand().getItem() instanceof ItemGun || !GunConfig.CLIENT.display.restrictCameraRollToWeapons ? strafe : 0F;
         float speed = strafe != 0 ? 0.1F : 0.15F;
-        this.immersiveRoll = MathHelper.lerp(speed, this.immersiveRoll, targetAngle);
+        this.immersiveRoll = lerp(speed, this.immersiveRoll, targetAngle);
 
         float deltaY = MathHelper.clamp((float) (player.lastTickPosY - player.posY), -1.0F, 1.0F);
         deltaY *= (float) (1.0 - this.normalZoomProgress);
@@ -648,7 +648,7 @@ public class RenderEvents
     {
         if(GunConfig.CLIENT.display.cameraRollEffect)
         {
-            float roll = MathHelper.lerp((float) event.getRenderPartialTicks(), this.prevImmersiveRoll, this.immersiveRoll);
+            float roll = lerp((float) event.getRenderPartialTicks(), this.prevImmersiveRoll, this.immersiveRoll);
             roll = (float) Math.sin((roll * Math.PI) / 2.0);
             roll *= (float) GunConfig.CLIENT.display.cameraRollAngle;
             event.setRoll(-roll);
@@ -658,6 +658,11 @@ public class RenderEvents
     private static float rotLerp(float delta, float start, float end)
     {
         return start + delta * MathHelper.wrapDegrees(end - start);
+    }
+
+    private static float lerp(float delta, float start, float end)
+    {
+        return start + delta * (end - start);
     }
 
     private static float approach(float current, float target, float maxIncrease)
