@@ -83,7 +83,7 @@ public class ModelMediumScope implements IOverrideModel
                     GlStateManager.color(1.0F, 1.0F, 1.0F, (float) ClientProxy.renderEvents.normalZoomProgress * 0.8F + 0.2F);
                     GlStateManager.pushMatrix();
                     {
-                        double ringSize = size * 0.5;
+                        double ringSize = size * 0.25;
                         GlStateManager.translate((size - ringSize) / 2, (size - ringSize) / 2, 0.0001);
                         mc.getTextureManager().bindTexture(RETICLE);
                         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
