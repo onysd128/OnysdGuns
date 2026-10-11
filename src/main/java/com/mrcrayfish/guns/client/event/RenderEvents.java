@@ -18,6 +18,7 @@ import com.mrcrayfish.guns.item.attachment.impl.Scope;
 import com.mrcrayfish.guns.object.Bullet;
 import com.mrcrayfish.guns.object.GripType;
 import com.mrcrayfish.guns.object.Gun;
+import com.mrcrayfish.guns.util.GunModifierHelper;
 import com.mrcrayfish.obfuscate.client.event.ModelPlayerEvent;
 import com.mrcrayfish.obfuscate.client.event.RenderItemEvent;
 import net.minecraft.client.Minecraft;
@@ -125,8 +126,8 @@ public class RenderEvents
         return INSTANCE != null ? INSTANCE.normalZoomProgress : 0.0;
     }
 
-    private int zoomProgress;
-    private int lastZoomProgress;
+    private double zoomProgress;
+    private double lastZoomProgress;
     public double normalZoomProgress;
     public double recoilNormal;
     public double recoilAngle;
@@ -209,7 +210,7 @@ public class RenderEvents
                             }
                         }
                     }
-                    event.setNewfov(newFov + (1.0F - newFov) * (1.0F - (zoomProgress / (float) ZOOM_TICKS)));
+                    event.setNewfov(newFov + (1.0F - newFov) * (1.0F - (float) (zoomProgress / ZOOM_TICKS)));
                 }
                 else
                 {
@@ -236,18 +237,27 @@ public class RenderEvents
         lastZoomProgress = zoomProgress;
 
         EntityPlayer player = Minecraft.getMinecraft().player;
+        double aimSpeed = 1.0;
+        if(player != null)
+        {
+            ItemStack heldItem = player.getHeldItemMainhand();
+            if(heldItem.getItem() instanceof ItemGun)
+            {
+                aimSpeed = GunModifierHelper.getModifiedAimDownSightSpeed(heldItem, 1.0);
+            }
+        }
         if(isZooming(player) && !player.getDataManager().get(CommonEvents.RELOADING))
         {
             if(zoomProgress < ZOOM_TICKS)
             {
-                zoomProgress++;
+                zoomProgress = Math.min(ZOOM_TICKS, zoomProgress + aimSpeed);
             }
         }
         else
         {
             if(zoomProgress > 0)
             {
-                zoomProgress--;
+                zoomProgress = Math.max(0.0, zoomProgress - aimSpeed);
             }
         }
     }
@@ -479,7 +489,8 @@ public class RenderEvents
             recoilNormal -= recoilNormal * (0.5 * this.normalZoomProgress);
         }
 
-        float kickReduction = 1.0F; /* 1.12.2 has no GunModifierHelper */
+        /* The attachment recoil/kick reductions are already baked into the modified gun by GunModifierHelper */
+        float kickReduction = 1.0F;
         float recoilReduction = 1.0F;
         double kick = gun.general.recoilKick * 0.0625 * recoilNormal * RecoilHandler.get().getAdsRecoilReduction(gun);
         float recoilLift = (float) (gun.general.recoilAngle * recoilNormal) * (float) RecoilHandler.get().getAdsRecoilReduction(gun);

@@ -59,7 +59,7 @@ public class RecoilHandler
         if(!GunConfig.CLIENT.display.enableCameraRecoil)
             return;
 
-        float recoilModifier = 1.0F; /* 1.12.2 has no GunModifierHelper */
+        float recoilModifier = 1.0F; /* Attachment recoil reduction is baked into the modified gun by GunModifierHelper */
         recoilModifier *= (float) this.getAdsRecoilReduction(gun);
         this.cameraRecoil = gun.general.recoilAngle * recoilModifier;
         this.progressCameraRecoil = 0F;

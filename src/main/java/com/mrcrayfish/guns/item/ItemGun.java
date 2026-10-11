@@ -16,6 +16,7 @@ import com.mrcrayfish.guns.network.message.MessageBullet;
 import com.mrcrayfish.guns.network.message.MessageMuzzleFlash;
 import com.mrcrayfish.guns.network.message.MessageShoot;
 import com.mrcrayfish.guns.object.Gun;
+import com.mrcrayfish.guns.util.GunModifierHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -196,7 +197,7 @@ public class ItemGun extends ItemColored
             playerIn.getDataManager().set(CommonEvents.RELOADING, false);
         }
 
-        boolean silenced = Gun.getAttachment(IAttachment.Type.BARREL, heldItem).getItem() == ModGuns.SILENCER;
+        boolean silenced = GunModifierHelper.isSilencedFire(heldItem);
 
         Gun modifiedGun = item.getModifiedGun(heldItem);
         if(!modifiedGun.general.alwaysSpread && modifiedGun.general.spread > 0F)
@@ -210,10 +211,7 @@ public class ItemGun extends ItemColored
             EntityProjectile bullet = factory.create(worldIn, playerIn, item, modifiedGun);
             bullet.setWeapon(heldItem);
             bullet.setAdditionalDamage(ItemGun.getAdditionalDamage(heldItem));
-            if(silenced)
-            {
-                bullet.setDamageModifier(0.75F);
-            }
+            /* The silenced barrel's reduced damage is applied by GunModifierHelper (REDUCED_DAMAGE) */
             worldIn.spawnEntity(bullet);
 
             if(!modifiedGun.projectile.visible)
@@ -363,13 +361,13 @@ public class ItemGun extends ItemColored
 
     public Gun getModifiedGun(ItemStack stack)
     {
+        Gun gunCopy = gun.copy();
         NBTTagCompound tagCompound = stack.getTagCompound();
         if(tagCompound != null && tagCompound.hasKey("Gun", Constants.NBT.TAG_COMPOUND))
         {
-            Gun gunCopy = gun.copy();
             gunCopy.deserializeNBT(tagCompound.getCompoundTag("Gun"));
-            return gunCopy;
         }
-        return gun;
+        /* Bake the attachment modifiers (spread, rate, recoil, kick, projectile damage/speed/life) into the copy */
+        return GunModifierHelper.applyModifiers(stack, gunCopy);
     }
 }
