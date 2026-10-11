@@ -1368,6 +1368,13 @@ public class RenderEvents
         GlStateManager.rotate(bullet.getRotationYaw(), 0, 1, 0);
         GlStateManager.rotate(-bullet.getRotationPitch() + 90, 1, 0, 0);
 
+        /* Ported from 1.19: resolve the shooter so the trail can be clamped to them. The bullet
+         * spawns at the shooter's eyes, so without this the trail is drawn at its full length
+         * straight back through the camera, smearing the trail texture across the screen. 1.19 also
+         * hides the local player's own trail entirely since it would start inside their view. */
+        Entity shooter = Minecraft.getMinecraft().world != null ? Minecraft.getMinecraft().world.getEntityByID(bullet.getProjectile().getShooterId()) : null;
+
+        if(shooter == null || shooter.getEntityId() != entity.getEntityId())
         {
             GlStateManager.pushAttrib();
             GlStateManager.enableBlend();
@@ -1381,6 +1388,10 @@ public class RenderEvents
 
             Vec3d motionVec = new Vec3d(bullet.getMotionX(), bullet.getMotionY(), bullet.getMotionZ());
             double length = (motionVec.length() / 3.0) * bullet.getTrailLengthMultiplier();
+            if(shooter != null)
+            {
+                length = Math.min(length, shooter.getPositionEyes(partialTicks).distanceTo(new Vec3d(bulletX, bulletY, bulletZ)));
+            }
 
             int trailColor = bullet.getTrailColor();
             float r = (float)(trailColor >> 16 & 255) / 255.0F;

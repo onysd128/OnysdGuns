@@ -385,6 +385,15 @@ public class EntityProjectile extends Entity implements IEntityAdditionalSpawnDa
         return shooter;
     }
 
+    /**
+     * @return the entity id of the shooter. Unlike {@link #getShooter()} this is also valid on the
+     * client, where the shooter instance itself is not synced.
+     */
+    public int getShooterId()
+    {
+        return this.shooterId;
+    }
+
     public float getDamage()
     {
         float damage = (this.projectile.damage + this.additionalDamage) * this.damageModifier;
