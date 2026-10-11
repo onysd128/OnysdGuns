@@ -1,31 +1,44 @@
 package com.mrcrayfish.guns.item;
 
-import com.mrcrayfish.guns.Reference;
+import com.mrcrayfish.guns.item.attachment.IScope;
+import com.mrcrayfish.guns.item.attachment.impl.Scope;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
 
 /**
  * Author: MrCrayfish
  */
-public class ItemScope extends ItemAttachment implements ISubItems
+public class ItemScope extends AttachmentItem<Scope> implements IScope
 {
-    public ItemScope()
+    private final Scope scope;
+
+    public ItemScope(Scope scope)
     {
-        super(new ResourceLocation(Reference.MOD_ID, "scope"), IAttachment.Type.SCOPE);
-        this.setHasSubtypes(true);
+        super(IAttachment.Type.SCOPE);
+        this.setHasSubtypes(false);
         this.setMaxDamage(0);
+        this.scope = scope;
+    }
+
+    @Override
+    public IAttachment.Type getType()
+    {
+        return IAttachment.Type.SCOPE;
+    }
+
+    @Override
+    public Scope getProperties()
+    {
+        return this.scope;
     }
 
     @Override
     public String getTranslationKey(ItemStack stack)
     {
-        return super.getTranslationKey(stack) + "." + Type.values()[stack.getItemDamage()].name;
+        return super.getTranslationKey(stack);
     }
 
     @Override
@@ -35,61 +48,6 @@ public class ItemScope extends ItemAttachment implements ISubItems
         if(!isInCreativeTab(tab))
             return;
 
-        for (int i = 0; i < Type.values().length; i++)
-        {
-            subItems.add(new ItemStack(this, 1, i));
-        }
-    }
-
-    @Override
-    public NonNullList<ResourceLocation> getModels()
-    {
-        NonNullList<ResourceLocation> modelLocations = NonNullList.create();
-        for(Type type : Type.values())
-        {
-            modelLocations.add(new ResourceLocation(Reference.MOD_ID, "scope_" + type.name));
-        }
-        return modelLocations;
-    }
-
-    public enum Type
-    {
-        SMALL("small", 0.1F, 1.55F),
-        MEDIUM("medium", 0.2F, 1.625F),
-        LONG("long", 0.35F, 1.4F);
-
-        private String name;
-        private float additionalZoom;
-        private double heightToCenter;
-
-        Type(String name, float additionalZoom, double heightToCenter)
-        {
-            this.name = name;
-            this.additionalZoom = additionalZoom;
-            this.heightToCenter = heightToCenter;
-        }
-
-        public float getAdditionalZoom()
-        {
-            return additionalZoom;
-        }
-
-        public double getHeightToCenter()
-        {
-            return heightToCenter;
-        }
-
-        @Nullable
-        public static Type getFromStack(ItemStack stack)
-        {
-            if(stack != null && stack.getItem() instanceof ItemScope)
-            {
-                if(stack.getMetadata() >= 0 && stack.getMetadata() < values().length)
-                {
-                    return values()[stack.getMetadata()];
-                }
-            }
-            return null;
-        }
+        subItems.add(new ItemStack(this));
     }
 }

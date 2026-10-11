@@ -18,10 +18,15 @@ item.cgm.grenade.name=Grenade
 item.cgm.stun_grenade.name=Stun Grenade
 item.cgm.missile.name=Missile
 
-item.cgm.scope.small.name=Scope (Short)
-item.cgm.scope.medium.name=Scope (Medium)
-item.cgm.scope.long.name=Scope (Long)
+item.cgm.short_scope.name=Short Scope
+item.cgm.medium_scope.name=Medium Scope
+item.cgm.long_scope.name=Long Scope
 item.cgm.silencer.name=Silencer
+item.cgm.light_stock.name=Light Stock
+item.cgm.tactical_stock.name=Tactical Stock
+item.cgm.weighted_stock.name=Weighted Stock
+item.cgm.light_grip.name=Light Grip
+item.cgm.specialised_grip.name=Specialised Grip
 
 itemGroup.tabCGM=Onysd Guns
 

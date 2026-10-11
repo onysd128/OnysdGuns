@@ -27,7 +27,6 @@ import com.mrcrayfish.guns.init.ModGuns;
 import com.mrcrayfish.guns.init.RegistrationHandler;
 import com.mrcrayfish.guns.item.GunRegistry;
 import com.mrcrayfish.guns.item.ItemColored;
-import com.mrcrayfish.guns.item.ItemScope;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.state.IBlockState;
@@ -115,9 +114,9 @@ public class ClientProxy extends CommonProxy
 		});
 
 		ModelOverrides.register(new ItemStack(ModGuns.CHAIN_GUN), new ModelChainGun());
-		ModelOverrides.register(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.SMALL.ordinal()), new ModelShortScope());
-		ModelOverrides.register(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.MEDIUM.ordinal()), new ModelMediumScope());
-		ModelOverrides.register(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.LONG.ordinal()), new ModelLongScope());
+		ModelOverrides.register(new ItemStack(ModGuns.SHORT_SCOPE), new ModelShortScope());
+		ModelOverrides.register(new ItemStack(ModGuns.MEDIUM_SCOPE), new ModelMediumScope());
+		ModelOverrides.register(new ItemStack(ModGuns.LONG_SCOPE), new ModelLongScope());
 
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.PISTOL), new DisplayProperty(0.0F, 0.55F, -0.25F, 0.0F, 0.0F, 0.0F, 3.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SHOTGUN), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 3.0F));
@@ -133,9 +132,9 @@ public class ClientProxy extends CommonProxy
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.GRENADE), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 3.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.MISSILE), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 2.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.STUN_GRENADE), new DisplayProperty(0.0F, 0.55F, 0.0F, 0.0F, 0.0F, 0.0F, 3.0F));
-		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.SMALL.ordinal()), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
-		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.MEDIUM.ordinal()), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
-		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.LONG.ordinal()), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SHORT_SCOPE), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.MEDIUM_SCOPE), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.LONG_SCOPE), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SILENCER), new DisplayProperty(0.0F, 0.25F, 0.5F, 0.0F, 0.0F, 0.0F, 1.5F));
 	}
 

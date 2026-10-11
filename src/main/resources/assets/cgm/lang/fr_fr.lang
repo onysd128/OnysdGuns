@@ -17,10 +17,15 @@ item.cgm.grenade.name=Grenade
 item.cgm.stun_grenade.name=Grenade Étourdissante
 item.cgm.missile.name=Missile
 
-item.cgm.scope.small.name=Lunette (Courte)
-item.cgm.scope.medium.name=Lunette (Moyenne)
-item.cgm.scope.long.name=Lunette (Longue)
+item.cgm.short_scope.name=Lunette (Courte)
+item.cgm.medium_scope.name=Lunette (Moyenne)
+item.cgm.long_scope.name=Lunette (Longue)
 item.cgm.silencer.name=Silencieux
+item.cgm.light_stock.name=Crosse Légère
+item.cgm.tactical_stock.name=Crosse Tactique
+item.cgm.weighted_stock.name=Lourde Crosse
+item.cgm.light_grip.name=Poignée Légère
+item.cgm.specialised_grip.name=Poignée Spécialisée
 
 itemGroup.tabCGM=Onysd Guns
 

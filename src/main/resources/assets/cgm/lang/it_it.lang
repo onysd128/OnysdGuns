@@ -17,10 +17,15 @@ item.cgm.grenade.name=Granata
 item.cgm.stun_grenade.name=Granata stordente
 item.cgm.missile.name=Missile
 
-item.cgm.scope.small.name=Mirino (corto)
-item.cgm.scope.medium.name=Mirino (medio)
-item.cgm.scope.long.name=Mirino (lungo)
+item.cgm.short_scope.name=Mirino (corto)
+item.cgm.medium_scope.name=Mirino (medio)
+item.cgm.long_scope.name=Mirino (lungo)
 item.cgm.silencer.name=Silenziatore
+item.cgm.light_stock.name=Calcio leggero
+item.cgm.tactical_stock.name=Calcio tattico
+item.cgm.weighted_stock.name=Calcio pesante
+item.cgm.light_grip.name=Impugnatura leggera
+item.cgm.specialised_grip.name=Impugnatura specializzata
 
 itemGroup.tabCGM=Onysd Guns
 

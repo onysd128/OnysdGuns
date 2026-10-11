@@ -14,6 +14,7 @@ import com.mrcrayfish.guns.event.CommonEvents;
 import com.mrcrayfish.guns.init.ModGuns;
 import com.mrcrayfish.guns.init.ModPotions;
 import com.mrcrayfish.guns.item.*;
+import com.mrcrayfish.guns.item.attachment.impl.Scope;
 import com.mrcrayfish.guns.object.Bullet;
 import com.mrcrayfish.guns.object.GripType;
 import com.mrcrayfish.guns.object.Gun;
@@ -197,12 +198,12 @@ public class RenderEvents
                     float newFov = gun.getGun().modules.zoom.fovModifier - 0.1F;
                     if(scope != null)
                     {
-                        ItemScope.Type scopeType = ItemScope.Type.getFromStack(scope);
-                        if(scopeType != null)
+                        Scope scopeProps = Scope.getScopeFromStack(scope);
+                        if(scopeProps != null)
                         {
-                            newFov -= scopeType.getAdditionalZoom();
+                            newFov -= scopeProps.getAdditionalZoom();
                             mc.gameSettings.smoothCamera = gun.getGun().modules.attachments.scope.smooth;
-                            if(scopeType == ItemScope.Type.LONG)
+                            if(scopeProps.getFovModifier() <= 0.3F)
                             {
                                 mc.gameSettings.smoothCamera = true;
                             }
@@ -365,7 +366,7 @@ public class RenderEvents
         }
 
         ItemStack scope = Gun.getScope(heldItem);
-        ItemScope.Type scopeType = ItemScope.Type.getFromStack(scope);
+        Scope scopeProps = Scope.getScopeFromStack(scope);
         IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(heldItem);
         float scaleX = model.getItemCameraTransforms().firstperson_right.scale.getX();
         float scaleY = model.getItemCameraTransforms().firstperson_right.scale.getY();
@@ -384,11 +385,11 @@ public class RenderEvents
                 double zOffset = 0.0;
 
                 Gun gun = itemGun.getGun();
-                if(gun.canAttachType(IAttachment.Type.SCOPE) && scope != null && scopeType != null)
+                if(gun.canAttachType(IAttachment.Type.SCOPE) && scope != null && scopeProps != null)
                 {
                     Gun.ScaledPositioned scaledPos = gun.modules.attachments.scope;
                     xOffset -= scaledPos.xOffset * 0.0625 * scaleX;
-                    yOffset -= scaledPos.yOffset * 0.0625 * scaleY - translateY + scopeType.getHeightToCenter() * scaleY * 0.0625 * scaledPos.scale;
+                    yOffset -= scaledPos.yOffset * 0.0625 * scaleY - translateY + scopeProps.getHeightToCenter() * scaleY * 0.0625 * scaledPos.scale;
                     zOffset -= scaledPos.zOffset * 0.0625 * scaleZ - translateZ - 0.35;
                 }
                 else if(gun.modules.zoom != null)
@@ -727,8 +728,8 @@ public class RenderEvents
 
         if(!heldItem.isEmpty() && heldItem.getItem() instanceof ItemGun)
         {
-            ItemScope.Type scopeType = ItemScope.Type.getFromStack(Gun.getAttachment(IAttachment.Type.SCOPE, heldItem));
-            if(scopeType == ItemScope.Type.LONG && normalZoomProgress == 1.0)
+            Scope scopeProps = Scope.getScopeFromStack(Gun.getAttachment(IAttachment.Type.SCOPE, heldItem));
+            if(scopeProps != null && scopeProps.getFovModifier() <= 0.3F && normalZoomProgress == 1.0)
             {
                 if(true) return;
 

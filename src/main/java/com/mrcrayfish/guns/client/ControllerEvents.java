@@ -11,7 +11,7 @@ import com.mrcrayfish.guns.client.event.GunHandler;
 import com.mrcrayfish.guns.client.event.ReloadHandler;
 import com.mrcrayfish.guns.event.CommonEvents;
 import com.mrcrayfish.guns.item.ItemGun;
-import com.mrcrayfish.guns.item.ItemScope;
+import com.mrcrayfish.guns.item.attachment.impl.Scope;
 import com.mrcrayfish.guns.network.PacketHandler;
 import com.mrcrayfish.guns.network.message.MessageUnload;
 import com.mrcrayfish.guns.object.Gun;
@@ -92,27 +92,29 @@ public class ControllerEvents
                 ItemStack scope = Gun.getScope(heldItem);
                 if (scope != null)
                 {
-                    ItemScope.Type scopeType = ItemScope.Type.getFromStack(scope);
-                    if(scopeType != null)
+                    Scope scopeProps = Scope.getScopeFromStack(scope);
+                    if(scopeProps != null)
                     {
-                        switch(scopeType)
+                        float fovModifier = scopeProps.getFovModifier();
+                        // Long scope (0.25 FOV) = very slow when right stick clicked
+                        if(fovModifier <= 0.3F)
                         {
-                            case LONG:
-                                if(event.getController().getState().rightStickClick)
-                                {
-                                    event.setYawSpeed(1.5F);
-                                    event.setPitchSpeed(1.0F);
-                                }
-                                else
-                                {
-                                    event.setYawSpeed(3.5F);
-                                    event.setPitchSpeed(3.0F);
-                                }
-                                break;
-                            case MEDIUM:
-                                event.setYawSpeed(6.66F);
-                                event.setPitchSpeed(5.0F);
-                                break;
+                            if(event.getController().getState().rightStickClick)
+                            {
+                                event.setYawSpeed(1.5F);
+                                event.setPitchSpeed(1.0F);
+                            }
+                            else
+                            {
+                                event.setYawSpeed(3.5F);
+                                event.setPitchSpeed(3.0F);
+                            }
+                        }
+                        // Medium scope (0.5 FOV)
+                        else if(fovModifier <= 0.6F)
+                        {
+                            event.setYawSpeed(6.66F);
+                            event.setPitchSpeed(5.0F);
                         }
                     }
                 }
@@ -146,8 +148,8 @@ public class ControllerEvents
                 ItemStack scope = Gun.getScope(heldItem);
                 if (scope != null && MrCrayfishGunMod.proxy.isZooming())
                 {
-                    ItemScope.Type scopeType = ItemScope.Type.getFromStack(scope);
-                    if(scopeType == ItemScope.Type.LONG)
+                    Scope scopeProps = Scope.getScopeFromStack(scope);
+                    if(scopeProps != null && scopeProps.getFovModifier() <= 0.3F)
                     {
                         event.getActions().put(Buttons.RIGHT_THUMB_STICK, new Action("Hold Breath", Action.Side.RIGHT));
                     }

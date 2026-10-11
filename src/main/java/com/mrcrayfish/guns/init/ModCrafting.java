@@ -1,7 +1,7 @@
 package com.mrcrayfish.guns.init;
 
 import com.mrcrayfish.guns.common.WorkbenchRegistry;
-import com.mrcrayfish.guns.item.ItemScope;
+import com.mrcrayfish.guns.init.ModGuns;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -53,15 +53,15 @@ public class ModCrafting
                 new ItemStack(Items.GLOWSTONE_DUST, 4),
                 new ItemStack(Items.GUNPOWDER, 2),
                 new ItemStack(Items.IRON_INGOT, 2));
-        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.SMALL.ordinal()),
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.SHORT_SCOPE),
                 new ItemStack(Items.IRON_INGOT, 4),
                 new ItemStack(Blocks.GLASS_PANE, 1),
                 new ItemStack(Items.DYE, 1, EnumDyeColor.RED.getDyeDamage()));
-        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.MEDIUM.ordinal()),
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.MEDIUM_SCOPE),
                 new ItemStack(Items.IRON_INGOT, 6),
                 new ItemStack(Blocks.GLASS_PANE, 2),
                 new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()));
-        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.SCOPES, 1, ItemScope.Type.LONG.ordinal()),
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.LONG_SCOPE),
                 new ItemStack(Items.IRON_INGOT, 8),
                 new ItemStack(Blocks.GLASS_PANE, 3),
                 new ItemStack(Items.DYE, 2, EnumDyeColor.BLACK.getDyeDamage()));

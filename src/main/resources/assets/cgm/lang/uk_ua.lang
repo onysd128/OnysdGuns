@@ -18,10 +18,15 @@ item.cgm.grenade.name=Граната
 item.cgm.stun_grenade.name=Світлошумова граната
 item.cgm.missile.name=Ракета
 
-item.cgm.scope.small.name=Приціл (Короткий)
-item.cgm.scope.medium.name=Приціл (Середній)
-item.cgm.scope.long.name=Приціл (Довгий)
+item.cgm.short_scope.name=Короткий приціл
+item.cgm.medium_scope.name=Середній приціл
+item.cgm.long_scope.name=Довгий приціл
 item.cgm.silencer.name=Глушник
+item.cgm.light_stock.name=Легкий приклад
+item.cgm.tactical_stock.name=Тактичний приклад
+item.cgm.weighted_stock.name=Вагастий приклад
+item.cgm.light_grip.name=Легкий піджимак
+item.cgm.specialised_grip.name=Спеціалізований піджимак
 
 itemGroup.tabCGM=Onysd Guns
 
