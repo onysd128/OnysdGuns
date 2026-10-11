@@ -34,85 +34,10 @@ public class TabGun extends CreativeTabs
 	@Override
 	public void displayAllRelevantItems(NonNullList<ItemStack> items)
 	{
-		// 1. Workbench
-		if(ModBlocks.WORKBENCH != null)
-		{
-			items.add(new ItemStack(ModBlocks.WORKBENCH));
-		}
+		// Matches 1.19, which just outputs every mod item in ModItems registration order:
+		// firearms, ammunition, grenades, scopes, barrel, stocks, under barrel, then the workbench.
 
-		// 2. Scopes
-		if(ModGuns.SHORT_SCOPE != null)
-		{
-			ModGuns.SHORT_SCOPE.getSubItems(this, items);
-		}
-		if(ModGuns.MEDIUM_SCOPE != null)
-		{
-			ModGuns.MEDIUM_SCOPE.getSubItems(this, items);
-		}
-		if(ModGuns.LONG_SCOPE != null)
-		{
-			ModGuns.LONG_SCOPE.getSubItems(this, items);
-		}
-
-		// 3. Silencer (right after scopes)
-		if(ModGuns.SILENCER != null)
-		{
-			ModGuns.SILENCER.getSubItems(this, items);
-		}
-
-		// 4. Stocks
-		if(ModGuns.LIGHT_STOCK != null)
-		{
-			ModGuns.LIGHT_STOCK.getSubItems(this, items);
-		}
-		if(ModGuns.TACTICAL_STOCK != null)
-		{
-			ModGuns.TACTICAL_STOCK.getSubItems(this, items);
-		}
-		if(ModGuns.WEIGHTED_STOCK != null)
-		{
-			ModGuns.WEIGHTED_STOCK.getSubItems(this, items);
-		}
-
-		// 5. Under barrel
-		if(ModGuns.LIGHT_GRIP != null)
-		{
-			ModGuns.LIGHT_GRIP.getSubItems(this, items);
-		}
-		if(ModGuns.SPECIALISED_GRIP != null)
-		{
-			ModGuns.SPECIALISED_GRIP.getSubItems(this, items);
-		}
-
-		// 6. Ammunition
-		if(ModGuns.BASIC_AMMO != null)
-		{
-			items.add(new ItemStack(ModGuns.BASIC_AMMO));
-		}
-		if(ModGuns.ADVANCED_AMMO != null)
-		{
-			items.add(new ItemStack(ModGuns.ADVANCED_AMMO));
-		}
-		if(ModGuns.SHELL != null)
-		{
-			items.add(new ItemStack(ModGuns.SHELL));
-		}
-		if(ModGuns.MISSILE != null)
-		{
-			items.add(new ItemStack(ModGuns.MISSILE));
-		}
-
-		// 7. Grenades
-		if(ModGuns.GRENADE != null)
-		{
-			items.add(new ItemStack(ModGuns.GRENADE));
-		}
-		if(ModGuns.STUN_GRENADE != null)
-		{
-			items.add(new ItemStack(ModGuns.STUN_GRENADE));
-		}
-
-		// 8. All firearms
+		// Firearms
 		if(ModGuns.PISTOL != null)
 		{
 			ModGuns.PISTOL.getSubItems(this, items);
@@ -148,6 +73,84 @@ public class TabGun extends CreativeTabs
 		if(ModGuns.HEAVY_RIFLE != null)
 		{
 			ModGuns.HEAVY_RIFLE.getSubItems(this, items);
+		}
+
+		// Ammunition
+		if(ModGuns.BASIC_AMMO != null)
+		{
+			items.add(new ItemStack(ModGuns.BASIC_AMMO));
+		}
+		if(ModGuns.ADVANCED_AMMO != null)
+		{
+			items.add(new ItemStack(ModGuns.ADVANCED_AMMO));
+		}
+		if(ModGuns.SHELL != null)
+		{
+			items.add(new ItemStack(ModGuns.SHELL));
+		}
+		if(ModGuns.MISSILE != null)
+		{
+			items.add(new ItemStack(ModGuns.MISSILE));
+		}
+
+		// Grenades
+		if(ModGuns.GRENADE != null)
+		{
+			items.add(new ItemStack(ModGuns.GRENADE));
+		}
+		if(ModGuns.STUN_GRENADE != null)
+		{
+			items.add(new ItemStack(ModGuns.STUN_GRENADE));
+		}
+
+		// Scopes
+		if(ModGuns.SHORT_SCOPE != null)
+		{
+			ModGuns.SHORT_SCOPE.getSubItems(this, items);
+		}
+		if(ModGuns.MEDIUM_SCOPE != null)
+		{
+			ModGuns.MEDIUM_SCOPE.getSubItems(this, items);
+		}
+		if(ModGuns.LONG_SCOPE != null)
+		{
+			ModGuns.LONG_SCOPE.getSubItems(this, items);
+		}
+
+		// Barrel
+		if(ModGuns.SILENCER != null)
+		{
+			ModGuns.SILENCER.getSubItems(this, items);
+		}
+
+		// Stocks
+		if(ModGuns.LIGHT_STOCK != null)
+		{
+			ModGuns.LIGHT_STOCK.getSubItems(this, items);
+		}
+		if(ModGuns.TACTICAL_STOCK != null)
+		{
+			ModGuns.TACTICAL_STOCK.getSubItems(this, items);
+		}
+		if(ModGuns.WEIGHTED_STOCK != null)
+		{
+			ModGuns.WEIGHTED_STOCK.getSubItems(this, items);
+		}
+
+		// Under barrel
+		if(ModGuns.LIGHT_GRIP != null)
+		{
+			ModGuns.LIGHT_GRIP.getSubItems(this, items);
+		}
+		if(ModGuns.SPECIALISED_GRIP != null)
+		{
+			ModGuns.SPECIALISED_GRIP.getSubItems(this, items);
+		}
+
+		// Workbench
+		if(ModBlocks.WORKBENCH != null)
+		{
+			items.add(new ItemStack(ModBlocks.WORKBENCH));
 		}
 	}
 }
