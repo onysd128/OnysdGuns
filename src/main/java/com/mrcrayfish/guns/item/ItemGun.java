@@ -5,6 +5,7 @@ import com.google.common.base.Predicate;
 import com.mrcrayfish.guns.GunConfig;
 import com.mrcrayfish.guns.ItemStackUtil;
 import com.mrcrayfish.guns.MrCrayfishGunMod;
+import com.mrcrayfish.guns.client.KeyBinds;
 import com.mrcrayfish.guns.common.ProjectileFactory;
 import com.mrcrayfish.guns.common.SpreadHandler;
 import com.mrcrayfish.guns.entity.EntityProjectile;
@@ -67,6 +68,12 @@ public class ItemGun extends ItemColored
     {
         Gun modifiedGun = getModifiedGun(stack);
 
+        ItemAmmo ammo = AmmoRegistry.getInstance().getAmmo(modifiedGun.projectile.item);
+        if(ammo != null)
+        {
+            tooltip.add(TextFormatting.GRAY + I18n.format("info.cgm.ammo_type", TextFormatting.WHITE + new ItemStack(ammo).getDisplayName()));
+        }
+
         String additionalDamageText = "";
         NBTTagCompound tagCompound = stack.getTagCompound();
         if(tagCompound != null)
@@ -99,6 +106,8 @@ public class ItemGun extends ItemColored
                 tooltip.add(TextFormatting.GRAY + I18n.format("info.cgm.ammo", TextFormatting.RESET + Integer.toString(ammoCount), gun.general.getMaxAmmo(modifiedGun)));
             }
         }
+
+        tooltip.add(TextFormatting.YELLOW + I18n.format("info.cgm.attachment_help", KeyBinds.KEY_ATTACHMENTS.getDisplayName()));
     }
 
     @Override

@@ -3,8 +3,13 @@ package com.mrcrayfish.guns.item;
 import com.google.common.annotations.Beta;
 import com.mrcrayfish.guns.MrCrayfishGunMod;
 import com.mrcrayfish.guns.item.attachment.impl.Attachment;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * A base attachment item implementation.
@@ -34,6 +39,16 @@ public class AttachmentItem<T extends Attachment> extends ItemColored implements
     public T getProperties()
     {
         return null;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
+    {
+        T properties = this.getProperties();
+        if(properties != null)
+        {
+            properties.addInformation(stack, tooltip);
+        }
     }
 
     @Override

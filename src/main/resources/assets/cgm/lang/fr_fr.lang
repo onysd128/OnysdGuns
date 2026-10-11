@@ -38,6 +38,33 @@ death.attack.cgm.bullet.decimated=%1$s a été decimé par %2$s
 info.cgm.damage=Dommages: %s
 info.cgm.ammo=Munitions: %s/%s
 info.cgm.ignore_ammo=Munitions Infinies
+info.cgm.ammo_type=Type de munitions: %s
+info.cgm.attachment_help=Appuyez sur %s en jeu pour les accessoires
+
+perk.cgm.title=Avantages:
+perk.cgm.entry.positive=+ %s
+perk.cgm.entry.negative=- %s
+perk.cgm.fire_volume.positive=Son de tir plus discret
+perk.cgm.fire_volume.negative=Son de tir plus fort
+perk.cgm.silenced.positive=Silencieux
+perk.cgm.sound_radius.positive=Rayon sonore du tir réduit
+perk.cgm.sound_radius.negative=Rayon sonore du tir augmenté
+perk.cgm.additional_damage.positive=Dommages supplémentaires §r(§l+%s ♥§r)
+perk.cgm.additional_damage.negative=Dommages négatifs §r(§l-%s ♥§r)
+perk.cgm.modified_damage.positive=Dommages de l'arme augmentés
+perk.cgm.modified_damage.negative=Dommages de l'arme réduits
+perk.cgm.projectile_speed.positive=Vitesse du projectile augmentée
+perk.cgm.projectile_speed.negative=Vitesse du projectile réduite
+perk.cgm.projectile_spread.positive=Dispersion du projectile réduite
+perk.cgm.projectile_spread.negative=Dispersion du projectile augmentée
+perk.cgm.projectile_life.positive=Portée des dégâts augmentée
+perk.cgm.projectile_life.negative=Portée des dégâts réduite
+perk.cgm.recoil.positive=Recul réduit
+perk.cgm.recoil.negative=Recul augmenté
+perk.cgm.ads_speed.positive=Vitesse de visée augmentée
+perk.cgm.ads_speed.negative=Vitesse de visée réduite
+perk.cgm.rate.positive=Cadence de tir augmentée
+perk.cgm.rate.negative=Cadence de tir réduite
 
 config.cgm.title=Configuration de Onysd Guns
 

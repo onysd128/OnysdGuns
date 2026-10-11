@@ -2,7 +2,9 @@ package com.mrcrayfish.guns.item.attachment.impl;
 
 import com.mrcrayfish.guns.interfaces.IGunModifier;
 import com.mrcrayfish.guns.item.IAttachment;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,7 @@ public abstract class Attachment
         List<String> perks = this.getPerks();
         if(perks != null && perks.size() > 0)
         {
-            tooltip.add("\u00A77\u00A7lPerks");
+            tooltip.add(TextFormatting.GRAY.toString() + TextFormatting.BOLD + I18n.format("perk.cgm.title"));
             tooltip.addAll(perks);
             return;
         }
@@ -228,14 +230,13 @@ public abstract class Attachment
         this.setPerks(positivePerks);
         if(positivePerks.size() > 0)
         {
-            tooltip.add("\u00A77\u00A7lPerks");
+            tooltip.add(TextFormatting.GRAY.toString() + TextFormatting.BOLD + I18n.format("perk.cgm.title"));
             tooltip.addAll(positivePerks);
         }
     }
 
     private static void addPerk(List<String> components, boolean positive, String id, Object... params)
     {
-        String formatted = String.format(id, params);
-        components.add((positive ? "\u00A7b+ " : "\u00A7e- ") + formatted);
+        components.add((positive ? TextFormatting.DARK_AQUA : TextFormatting.GOLD) + I18n.format(positive ? "perk.cgm.entry.positive" : "perk.cgm.entry.negative", TextFormatting.WHITE + I18n.format(id, params)));
     }
 }

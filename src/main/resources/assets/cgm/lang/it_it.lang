@@ -38,6 +38,33 @@ death.attack.cgm.bullet.decimated=%1$s e' stato decimato da %2$s
 info.cgm.damage=Danno: %s
 info.cgm.ammo=Munizioni: %s/%s
 info.cgm.ignore_ammo=Munizioni infinite
+info.cgm.ammo_type=Tipo munizioni: %s
+info.cgm.attachment_help=Premi %s per gli accessori
+
+perk.cgm.title=Bonus:
+perk.cgm.entry.positive=+ %s
+perk.cgm.entry.negative=- %s
+perk.cgm.fire_volume.positive=Rumore sparo più silenzioso
+perk.cgm.fire_volume.negative=Rumore sparo più forte
+perk.cgm.silenced.positive=Silenziato
+perk.cgm.sound_radius.positive=Raggio rumore sparo ridotto
+perk.cgm.sound_radius.negative=Raggio rumore sparo aumentato
+perk.cgm.additional_damage.positive=Danno aggiuntivo §r(§l+%s ♥§r)
+perk.cgm.additional_damage.negative=Danno negativo §r(§l-%s ♥§r)
+perk.cgm.modified_damage.positive=Danno arma aumentato
+perk.cgm.modified_damage.negative=Danno arma ridotto
+perk.cgm.projectile_speed.positive=Velocità proiettile aumentata
+perk.cgm.projectile_speed.negative=Velocità proiettile ridotta
+perk.cgm.projectile_spread.positive=Propagazione proiettile ridotta
+perk.cgm.projectile_spread.negative=Propagazione proiettile aumentata
+perk.cgm.projectile_life.positive=Raggio danno aumentato
+perk.cgm.projectile_life.negative=Raggio danno ridotto
+perk.cgm.recoil.positive=Rinculo ridotto
+perk.cgm.recoil.negative=Rinculo aumentato
+perk.cgm.ads_speed.positive=Velocità ADS aumentata
+perk.cgm.ads_speed.negative=Velocità ADS ridotta
+perk.cgm.rate.positive=Cadenza tiro aumentata
+perk.cgm.rate.negative=Cadenza tiro ridotta
 
 config.cgm.title=Onysd Guns Config
 
