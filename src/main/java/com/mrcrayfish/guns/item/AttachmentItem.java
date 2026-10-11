@@ -1,21 +1,26 @@
 package com.mrcrayfish.guns.item;
 
+import com.google.common.annotations.Beta;
+import com.mrcrayfish.guns.MrCrayfishGunMod;
 import com.mrcrayfish.guns.item.attachment.impl.Attachment;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nullable;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A base attachment item implementation.
  *
  * Author: MrCrayfish
  */
+@Beta
 public class AttachmentItem<T extends Attachment> extends ItemColored implements IAttachment<T>
 {
     private final IAttachment.Type type;
 
-    public AttachmentItem(IAttachment.Type type)
+    public AttachmentItem(ResourceLocation id, IAttachment.Type type)
     {
+        this.setTranslationKey(id.getNamespace() + "." + id.getPath());
+        this.setRegistryName(id);
+        this.setCreativeTab(MrCrayfishGunMod.GUN_TAB);
         this.type = type;
     }
 

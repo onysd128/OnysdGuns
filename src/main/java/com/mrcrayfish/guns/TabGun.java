@@ -41,9 +41,17 @@ public class TabGun extends CreativeTabs
 		}
 
 		// 2. Scopes
-		if(ModGuns.SCOPES != null)
+		if(ModGuns.SHORT_SCOPE != null)
 		{
-			ModGuns.SCOPES.getSubItems(this, items);
+			ModGuns.SHORT_SCOPE.getSubItems(this, items);
+		}
+		if(ModGuns.MEDIUM_SCOPE != null)
+		{
+			ModGuns.MEDIUM_SCOPE.getSubItems(this, items);
+		}
+		if(ModGuns.LONG_SCOPE != null)
+		{
+			ModGuns.LONG_SCOPE.getSubItems(this, items);
 		}
 
 		// 3. Silencer (right after scopes)
@@ -52,7 +60,31 @@ public class TabGun extends CreativeTabs
 			ModGuns.SILENCER.getSubItems(this, items);
 		}
 
-		// 4. Ammunition
+		// 4. Stocks
+		if(ModGuns.LIGHT_STOCK != null)
+		{
+			ModGuns.LIGHT_STOCK.getSubItems(this, items);
+		}
+		if(ModGuns.TACTICAL_STOCK != null)
+		{
+			ModGuns.TACTICAL_STOCK.getSubItems(this, items);
+		}
+		if(ModGuns.WEIGHTED_STOCK != null)
+		{
+			ModGuns.WEIGHTED_STOCK.getSubItems(this, items);
+		}
+
+		// 5. Under barrel
+		if(ModGuns.LIGHT_GRIP != null)
+		{
+			ModGuns.LIGHT_GRIP.getSubItems(this, items);
+		}
+		if(ModGuns.SPECIALISED_GRIP != null)
+		{
+			ModGuns.SPECIALISED_GRIP.getSubItems(this, items);
+		}
+
+		// 6. Ammunition
 		if(ModGuns.BASIC_AMMO != null)
 		{
 			items.add(new ItemStack(ModGuns.BASIC_AMMO));
@@ -70,7 +102,7 @@ public class TabGun extends CreativeTabs
 			items.add(new ItemStack(ModGuns.MISSILE));
 		}
 
-		// 5. Grenades
+		// 7. Grenades
 		if(ModGuns.GRENADE != null)
 		{
 			items.add(new ItemStack(ModGuns.GRENADE));
@@ -80,7 +112,7 @@ public class TabGun extends CreativeTabs
 			items.add(new ItemStack(ModGuns.STUN_GRENADE));
 		}
 
-		// 6. All firearms
+		// 8. All firearms
 		if(ModGuns.PISTOL != null)
 		{
 			ModGuns.PISTOL.getSubItems(this, items);

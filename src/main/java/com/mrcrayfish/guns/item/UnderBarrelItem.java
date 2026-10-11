@@ -3,6 +3,7 @@ package com.mrcrayfish.guns.item;
 import com.mrcrayfish.guns.item.attachment.IUnderBarrel;
 import com.mrcrayfish.guns.item.attachment.impl.UnderBarrel;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A basic under barrel attachment item implementation.
@@ -13,9 +14,9 @@ public class UnderBarrelItem extends AttachmentItem<UnderBarrel> implements IUnd
 {
     private final UnderBarrel underBarrel;
 
-    public UnderBarrelItem(UnderBarrel underBarrel)
+    public UnderBarrelItem(ResourceLocation id, UnderBarrel underBarrel)
     {
-        super(IAttachment.Type.UNDER_BARREL);
+        super(id, IAttachment.Type.UNDER_BARREL);
         this.underBarrel = underBarrel;
     }
 

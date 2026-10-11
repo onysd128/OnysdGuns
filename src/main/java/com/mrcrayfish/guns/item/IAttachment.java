@@ -64,7 +64,7 @@ public interface IAttachment<T>
         {
             for(Type type : values())
             {
-                if(type.tagKey.equalsIgnoreCase(s))
+                if(type.tagKey.equalsIgnoreCase(s) || type.serializeKey.equalsIgnoreCase(s) || type.translationKey.equalsIgnoreCase(s))
                 {
                     return type;
                 }

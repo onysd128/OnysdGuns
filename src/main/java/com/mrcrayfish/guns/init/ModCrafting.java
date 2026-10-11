@@ -67,5 +67,18 @@ public class ModCrafting
                 new ItemStack(Items.DYE, 2, EnumDyeColor.BLACK.getDyeDamage()));
         WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.SILENCER),
                 new ItemStack(Items.IRON_INGOT, 12));
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.LIGHT_STOCK),
+                new ItemStack(Items.IRON_INGOT, 4),
+                new ItemStack(Items.STICK, 1));
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.TACTICAL_STOCK),
+                new ItemStack(Items.IRON_INGOT, 6),
+                new ItemStack(Items.STICK, 1));
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.WEIGHTED_STOCK),
+                new ItemStack(Items.IRON_INGOT, 8),
+                new ItemStack(Items.STICK, 1));
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.LIGHT_GRIP),
+                new ItemStack(Items.IRON_INGOT, 4));
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.SPECIALISED_GRIP),
+                new ItemStack(Items.IRON_INGOT, 6));
     }
 }

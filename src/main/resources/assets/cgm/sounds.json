@@ -9,6 +9,7 @@
    "pistol_fire_silenced":         { "subtitle": "subtitle.cgm.fire.silenced",  "sounds": [{ "name": "cgm:pistol_fire_silenced" }]},
    "shotgun_fire_silenced":        { "subtitle": "subtitle.cgm.fire.silenced",  "sounds": [{ "name": "cgm:shotgun_fire_silenced" }]},
    "rifle_fire_silenced":          { "subtitle": "subtitle.cgm.fire.silenced",  "sounds": [{ "name": "cgm:rifle_fire_silenced" }]},
+   "assault_rifle_fire_silenced":  { "subtitle": "subtitle.cgm.fire.silenced",  "sounds": [{ "name": "cgm:assault_rifle_fire_silenced" }]},
    "pistol_reload":                { "subtitle": "subtitle.cgm.reload",         "sounds": [{ "name": "cgm:pistol_reload" }]},
    "grenade_stun_explosion":       { "subtitle": "subtitle.cgm.stun.explosion", "sounds": [{ "name": "cgm:grenade_stun_explosion" }]},
    "grenade_stun_ring":            { "subtitle": "subtitle.cgm.stun.ring",      "sounds": [{ "name": "cgm:grenade_stun_ring", "stream": true }]},

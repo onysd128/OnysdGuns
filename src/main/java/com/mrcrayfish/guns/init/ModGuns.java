@@ -59,9 +59,6 @@ public class ModGuns
     @GameRegistry.ObjectHolder("cgm:stun_grenade")
     public static final Item STUN_GRENADE = null;
 
-    @GameRegistry.ObjectHolder("cgm:scope")
-    public static final Item SCOPES = null;
-
     @GameRegistry.ObjectHolder("cgm:silencer")
     public static final Item SILENCER = null;
 
@@ -111,21 +108,21 @@ public class ModGuns
         register(new ItemPart());
 
         // Scope attachments (separate items instead of metadata)
-        register(new ScopeItem(com.mrcrayfish.guns.common.Attachments.SHORT_SCOPE.copy()).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
-        register(new ScopeItem(com.mrcrayfish.guns.common.Attachments.MEDIUM_SCOPE.copy()).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
-        register(new ScopeItem(com.mrcrayfish.guns.common.Attachments.LONG_SCOPE.copy()).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
+        register(new ScopeItem(new ResourceLocation(Reference.MOD_ID, "short_scope"), com.mrcrayfish.guns.common.Attachments.SHORT_SCOPE.copy()));
+        register(new ScopeItem(new ResourceLocation(Reference.MOD_ID, "medium_scope"), com.mrcrayfish.guns.common.Attachments.MEDIUM_SCOPE.copy()));
+        register(new ScopeItem(new ResourceLocation(Reference.MOD_ID, "long_scope"), com.mrcrayfish.guns.common.Attachments.LONG_SCOPE.copy()));
 
         // Barrel attachments
-        register(new BarrelItem(com.mrcrayfish.guns.item.attachment.impl.Barrel.create(8.0F, GunModifiers.SILENCED, GunModifiers.REDUCED_DAMAGE)).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
+        register(new BarrelItem(new ResourceLocation(Reference.MOD_ID, "silencer"), com.mrcrayfish.guns.item.attachment.impl.Barrel.create(8.0F, GunModifiers.SILENCED, GunModifiers.REDUCED_DAMAGE)));
 
         // Stock attachments
-        register(new StockItem(com.mrcrayfish.guns.item.attachment.impl.Stock.create(GunModifiers.BETTER_CONTROL)).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
-        register(new StockItem(com.mrcrayfish.guns.item.attachment.impl.Stock.create(GunModifiers.STABILISED)).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
-        register(new StockItem(com.mrcrayfish.guns.item.attachment.impl.Stock.create(GunModifiers.SUPER_STABILISED)).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
+        register(new StockItem(new ResourceLocation(Reference.MOD_ID, "light_stock"), com.mrcrayfish.guns.item.attachment.impl.Stock.create(GunModifiers.BETTER_CONTROL)));
+        register(new StockItem(new ResourceLocation(Reference.MOD_ID, "tactical_stock"), com.mrcrayfish.guns.item.attachment.impl.Stock.create(GunModifiers.STABILISED)));
+        register(new StockItem(new ResourceLocation(Reference.MOD_ID, "weighted_stock"), com.mrcrayfish.guns.item.attachment.impl.Stock.create(GunModifiers.SUPER_STABILISED)));
 
         // Under barrel attachments
-        register(new UnderBarrelItem(com.mrcrayfish.guns.item.attachment.impl.UnderBarrel.create(GunModifiers.LIGHT_RECOIL)).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
-        register(new UnderBarrelItem(com.mrcrayfish.guns.item.attachment.impl.UnderBarrel.create(GunModifiers.REDUCED_RECOIL)).setCreativeTab(MrCrayfishGunMod.GUN_TAB));
+        register(new UnderBarrelItem(new ResourceLocation(Reference.MOD_ID, "light_grip"), com.mrcrayfish.guns.item.attachment.impl.UnderBarrel.create(GunModifiers.LIGHT_RECOIL)));
+        register(new UnderBarrelItem(new ResourceLocation(Reference.MOD_ID, "specialised_grip"), com.mrcrayfish.guns.item.attachment.impl.UnderBarrel.create(GunModifiers.REDUCED_RECOIL)));
     }
 
     private static void register(Item item)

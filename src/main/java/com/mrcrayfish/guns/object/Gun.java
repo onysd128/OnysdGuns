@@ -403,6 +403,8 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 		{
 			@Optional public Scope scope;
 			@Optional public Barrel barrel;
+			@Optional public Stock stock;
+			@Optional public UnderBarrel underBarrel;
 
 			public static class Scope extends ScaledPositioned
 			{
@@ -433,6 +435,32 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 				}
 			}
 
+			public static class Stock extends ScaledPositioned
+			{
+				public Stock copy()
+				{
+					Stock stock = new Stock();
+					stock.scale = scale;
+					stock.xOffset = xOffset;
+					stock.yOffset = yOffset;
+					stock.zOffset = zOffset;
+					return stock;
+				}
+			}
+
+			public static class UnderBarrel extends ScaledPositioned
+			{
+				public UnderBarrel copy()
+				{
+					UnderBarrel underBarrel = new UnderBarrel();
+					underBarrel.scale = scale;
+					underBarrel.xOffset = xOffset;
+					underBarrel.yOffset = yOffset;
+					underBarrel.zOffset = zOffset;
+					return underBarrel;
+				}
+			}
+
 			public Attachments copy()
 			{
 				Attachments attachments = new Attachments();
@@ -443,6 +471,14 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 				if(barrel != null)
 				{
 					attachments.barrel = barrel.copy();
+				}
+				if(stock != null)
+				{
+					attachments.stock = stock.copy();
+				}
+				if(underBarrel != null)
+				{
+					attachments.underBarrel = underBarrel.copy();
 				}
 				return attachments;
 			}
@@ -540,6 +576,10 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 					return modules.attachments.scope != null;
 				case BARREL:
 					return modules.attachments.barrel != null;
+				case STOCK:
+					return modules.attachments.stock != null;
+				case UNDER_BARREL:
+					return modules.attachments.underBarrel != null;
 			}
 		}
 		return false;
@@ -556,6 +596,10 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 					return modules.attachments.scope;
 				case BARREL:
 					return modules.attachments.barrel;
+				case STOCK:
+					return modules.attachments.stock;
+				case UNDER_BARREL:
+					return modules.attachments.underBarrel;
 			}
 		}
 		return null;
@@ -564,18 +608,9 @@ public class Gun implements INBTSerializable<NBTTagCompound>
 	@Nullable
 	public static ItemStack getScope(ItemStack gun)
 	{
-		if(gun.hasTagCompound())
-		{
-			if(gun.getTagCompound().hasKey("attachments", Constants.NBT.TAG_COMPOUND))
-			{
-				NBTTagCompound attachment = gun.getTagCompound().getCompoundTag("attachments");
-				if(attachment.hasKey("scope", Constants.NBT.TAG_COMPOUND))
-				{
-					return new ItemStack(attachment.getCompoundTag("scope"));
-				}
-			}
-		}
-		return null;
+		// Delegate to getAttachment so both "Attachments" (1.19.X) and "attachments" keys are honoured
+		ItemStack scope = getAttachment(IAttachment.Type.SCOPE, gun);
+		return scope.isEmpty() ? null : scope;
 	}
 
 	public static ItemStack getAttachment(IAttachment.Type type, ItemStack gun)
