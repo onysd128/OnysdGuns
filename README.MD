@@ -11,6 +11,11 @@
 
 # Full Changes List
 
+### v1.2.1 (hotfix)
+
+1. 🛠️ **Machine Pistol Recipe** - The machine pistol can now be crafted at the workbench.
+2. 🖼️ **Texture Fix** - Removed bundled vanilla texture files that were overriding other texture packs and mods.
+
 ### v1.2
 
 1. 🎯 **New Attachments** - Added new scopes, a silencer, stocks and grips with real gameplay effects.

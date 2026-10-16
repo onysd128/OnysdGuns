@@ -31,6 +31,8 @@ public class ModCrafting
                 new ItemStack(Items.IRON_INGOT, 38));
         WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.ASSAULT_RIFLE),
                 new ItemStack(Items.IRON_INGOT, 28));
+        WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.MACHINE_PISTOL),
+                new ItemStack(Items.IRON_INGOT, 20));
         WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.HEAVY_RIFLE),
                 new ItemStack(Items.IRON_INGOT, 36));
         WorkbenchRegistry.registerRecipe(new ItemStack(ModGuns.BASIC_AMMO, 32),
