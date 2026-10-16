@@ -136,6 +136,12 @@ public class ClientProxy extends CommonProxy
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.MEDIUM_SCOPE), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.LONG_SCOPE), new DisplayProperty(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F));
 		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SILENCER), new DisplayProperty(0.0F, 0.25F, 0.5F, 0.0F, 0.0F, 0.0F, 1.5F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.MACHINE_PISTOL), new DisplayProperty(0.0F, 0.55F, -0.25F, 0.0F, 0.0F, 0.0F, 3.0F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.LIGHT_STOCK), new DisplayProperty(0.0F, 0.35F, -0.14F, 0.0F, 0.0F, 0.0F, 1.7F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.TACTICAL_STOCK), new DisplayProperty(0.0F, 0.38F, -0.16F, 0.0F, 0.0F, 0.0F, 1.7F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.WEIGHTED_STOCK), new DisplayProperty(0.0F, 0.43F, -0.16F, 0.0F, 0.0F, 0.0F, 1.7F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.LIGHT_GRIP), new DisplayProperty(0.0F, 0.15F, 0.0F, 0.0F, 0.0F, 0.0F, 5.0F));
+		GuiWorkbench.addDisplayProperty(new ItemStack(ModGuns.SPECIALISED_GRIP), new DisplayProperty(0.0F, 0.24F, 0.0F, 0.0F, 0.0F, 0.0F, 5.0F));
 	}
 
 	@Override

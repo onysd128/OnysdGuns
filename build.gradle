@@ -1,7 +1,8 @@
 buildscript {
     repositories {
+        maven { url = "https://maven.minecraftforge.net" }
+        mavenCentral()
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -67,6 +68,43 @@ processResources {
     exclude 'assets/minecraft/**'
 }
 
+// ForgeGradle 2.3 downloads the game assets from http://resources.download.minecraft.net, which only answers over
+// https now, so its own task is turned off and this one fetches whatever is missing from the asset index instead
 tasks.withType(net.minecraftforge.gradle.tasks.DownloadAssetsTask) {
     enabled = false
 }
+
+task downloadAssetsHttps {
+    dependsOn 'getAssetIndex'
+    doLast {
+        def assets = new File(gradle.gradleUserHomeDir, 'caches/minecraft/assets')
+        def index = new File(assets, 'indexes/1.12.json')
+        def objects = new groovy.json.JsonSlurper().parse(index).objects
+        def missing = objects.values().findAll { !new File(assets, 'objects/' + it.hash.substring(0, 2) + '/' + it.hash).exists() }
+        if (missing.isEmpty()) return
+        logger.lifecycle("Downloading ${missing.size()} missing game assets")
+        def pool = java.util.concurrent.Executors.newFixedThreadPool(8)
+        def failures = new java.util.concurrent.atomic.AtomicInteger()
+        missing.each { obj ->
+            pool.submit {
+                def file = new File(assets, 'objects/' + obj.hash.substring(0, 2) + '/' + obj.hash)
+                file.parentFile.mkdirs()
+                def part = new File(file.path + '.part')
+                try {
+                    new URL('https://resources.download.minecraft.net/' + obj.hash.substring(0, 2) + '/' + obj.hash).withInputStream { input ->
+                        part.withOutputStream { out -> out << input }
+                    }
+                    part.renameTo(file)
+                } catch (Exception e) {
+                    part.delete()
+                    failures.incrementAndGet()
+                }
+            }
+        }
+        pool.shutdown()
+        pool.awaitTermination(30, java.util.concurrent.TimeUnit.MINUTES)
+        if (failures.get() > 0) throw new GradleException("${failures.get()} game assets could not be downloaded")
+    }
+}
+
+tasks.getAssets.dependsOn downloadAssetsHttps
